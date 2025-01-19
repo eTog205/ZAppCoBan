@@ -56,8 +56,6 @@ void giaodien_menuben(bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kich
     kichthuoc_tinhnang = ImGui::GetWindowSize();
 
     ImVec4 button_caidat_color = ImVec4(0, 0, 0, 0);
-
-    // Tính toán màu Hover và Active từ màu chính
     ImVec4 button_caidat_hover_color = (button_caidat_color.w == 0.0f) ? ImVec4(0.3f, 0.3f, 0.3f, 0.2f) : AdjustColorBrightness(button_caidat_color, 0.8f);
     ImVec4 button_caidat_active_color = (button_caidat_color.w == 0.0f) ? ImVec4(0.2f, 0.2f, 0.2f, 0.4f) : AdjustColorBrightness(button_caidat_color, 1.2f);
 
@@ -74,15 +72,8 @@ void giaodien_menuben(bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kich
 
     // Hiển thị chữ "S" hoặc "S caidat" dựa trên trạng thái
     std::string text = "S caidat";
-
     int max_chars = std::max(1, static_cast<int>((current_width - collapsed_width) / (expanded_width - collapsed_width) * static_cast<float>(text.size())));
-
     std::string visible_text = text.substr(0, max_chars);
-
-    // Tính vị trí chữ luôn đặt cố định
-    ImVec2 text_pos = ImGui::GetCursorScreenPos();
-    text_pos.x += 10.0f; // Cách nút 10px theo trục X
-    text_pos.y += 10.0f; // Cách nút 10px theo trục Y
 
     // Vẽ nút
     if (ImGui::Button(" ", button_caidat_size))
@@ -90,6 +81,11 @@ void giaodien_menuben(bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kich
         hienthi_caidat = true;
         ImGui::SetWindowFocus("caidat");
     }
+
+    // Tính vị trí chữ luôn đặt cố định
+    ImVec2 text_pos = ImGui::GetCursorScreenPos();
+    text_pos.x += 10.0f; // Cách nút 10px theo trục X
+    text_pos.y += 10.0f; // Cách nút 10px theo trục Y
 
     // Vẽ chữ
     ImGui::GetWindowDrawList()->AddText(text_pos, ImGui::GetColorU32(ImGuiCol_Text), visible_text.c_str());
@@ -206,15 +202,24 @@ void giaodien_keotha_tep(GLFWwindow* cuaSo, int chieurong_manhinh, int chieucao_
 
     // Ô nhập đường dẫn tệp
     ImGui::SetCursorPos(ImVec2(30.0f, 10.0f));
-    ImGui::SetNextItemWidth(700.0f);
+    ImGui::SetNextItemWidth(windowWidth - button_size.x * 4);
 
     static char file_path[256] = ""; // Bộ đệm chứa đường dẫn tệp
     ImGui::InputText("###hidden", file_path, IM_ARRAYSIZE(file_path));
-    //ImGui::Text("", file_path);
 
     if (!is_collapsed || collapse_requested)
     {
-        ImGui::BeginChild("Vung tha tep", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
+        ImVec2 content_size1 = ImGui::GetContentRegionAvail();
+
+        float pos_y = button_size.y * 1.5f + 10.0f;
+        float drop_zone_width = content_size1.x * 0.8f;
+        float chieucao_vung_thatep = drop_zone_height - pos_y - 10.0f;
+        float centered_x = (content_size1.x - drop_zone_width) / 2.0f;
+
+
+        // Đặt vị trí và bắt đầu vùng thả tệp
+        ImGui::SetCursorPos(ImVec2(centered_x, pos_y));
+        ImGui::BeginChild("Vung tha tep", ImVec2(drop_zone_width, chieucao_vung_thatep), true, ImGuiWindowFlags_NoScrollbar);
 
         ImVec2 content_size = ImGui::GetContentRegionAvail();
         ImVec2 text_size = ImGui::CalcTextSize("Drop Here");
