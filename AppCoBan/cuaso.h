@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <GLFW/glfw3.h>
-#include <imgui.h>
+
 #include <iostream>
 #include <vector>
 
@@ -17,14 +17,14 @@ struct CauHinhCuaSo
     // Hàm tạo cấu hình mặc định
     static CauHinhCuaSo macdinh()
     {
-        return { 1024, 700, u8"tông", cuaso };
+        return { 1024, 700, "tong", cuaso };
     }
 
 };
 
 inline CauHinhCuaSo cauhinh_cuaso = CauHinhCuaSo::macdinh();
 inline std::vector<std::string> dropped_files;
-inline bool is_hovered = false;
+//inline bool is_hovered = false;
 
 // Hàm thay đổi chế độ hiển thị
 void thaydoi_chedo_hienthi(GLFWwindow* cuaso, const CauHinhCuaSo& cauhinh);
