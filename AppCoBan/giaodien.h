@@ -14,3 +14,7 @@ void giaodien_menuben(bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kich
 void giaodien_caidat(GLFWwindow* cuaSo, bool& hienthi_caidat);
 
 void giaodien_keotha_tep(GLFWwindow* cuaSo, int chieurong_manhinh, int chieucao_manhinh, const ImVec2& vitri_tinhnang, const ImVec2& kichthuoc_tinhnang);
+
+void giaodien_test();
+
+

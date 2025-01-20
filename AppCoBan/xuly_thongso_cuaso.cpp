@@ -9,6 +9,15 @@
 #include <iostream>
 
 
+static void caidat_font()
+{
+    ImGuiIO& io = ImGui::GetIO();
+
+    // Nạp font hỗ trợ tiếng Việt
+    io.Fonts->AddFontFromFileTTF("C:/Users/ZitKhongLo/Downloads/Noto_Sans/NotoSans-VariableFont_wdth,wght.ttf", 16.0f, nullptr);
+
+}
+
 GLFWwindow* khoitao_cuaso()
 {
     // Khởi tạo ImGui
@@ -51,10 +60,10 @@ GLFWwindow* khoitao_cuaso()
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowRounding = 10.0f;
 
+    caidat_font();
+
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
-
-    //ImGuiIO& io = ImGui::GetIO();
 
     return window;
 }
@@ -97,6 +106,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
         giaodien_menuben(hienthi_caidat, vitri_tinhnang, kichthuoc_tinhnang, chieucao_manhinh);
         giaodien_caidat(cuaso, hienthi_caidat);
         giaodien_keotha_tep(cuaso, chieurong_manhinh, chieucao_manhinh, vitri_tinhnang, kichthuoc_tinhnang);
+        giaodien_test();
 
         // Render
         ImGui::Render();

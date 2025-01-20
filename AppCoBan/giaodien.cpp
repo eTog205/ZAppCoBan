@@ -1,4 +1,6 @@
-﻿#include "cuaso.h"
+﻿#pragma execution_character_set("utf-8")
+
+#include "cuaso.h"
 #include "giaodien.h"
 #include "imgui.h"
 
@@ -92,7 +94,6 @@ void giaodien_menuben(bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kich
 
     ImGui::PopStyleColor(3);
     ImGui::PopStyleVar();
-
 
     // Nút thu gọn có chiều rộng bằng chiều rộng của menu bên, bo tròn cạnh và nằm sát cạnh dưới, vị trí bắt đầu từ sát cạnh bên trái đến sát cạnh bên phải
     float button_y_pos = kichthuoc_tinhnang.y - 28.0f;
@@ -233,4 +234,17 @@ void giaodien_keotha_tep(GLFWwindow* cuaSo, int chieurong_manhinh, int chieucao_
     ImGui::PopStyleVar(); // Khôi phục padding mặc định
 }
 
+void giaodien_test()
+{
+    ImGui::Begin("test");
 
+    //cái phải đúng
+    ImGui::SeparatorText("CORRECT");
+    ImGui::Text("Trần NhẤn T&*()_ng˚˖𓍢ִ໋🌷͙֒✧˚.🎀༘⋆");
+
+    //Cái sẽ sai
+    ImGui::SeparatorText("INCORRECT");
+    ImGui::DebugTextEncoding("Trần Nhân Tông˚˖𓍢ִ໋🌷͙֒✧˚.🎀༘⋆");
+
+    ImGui::End();
+}
