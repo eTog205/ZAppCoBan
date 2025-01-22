@@ -13,9 +13,14 @@ static void caidat_font()
 {
     ImGuiIO& io = ImGui::GetIO();
 
-    // Nạp font hỗ trợ tiếng Việt
-    io.Fonts->AddFontFromFileTTF("C:/Users/ZitKhongLo/Downloads/Noto_Sans/NotoSans-VariableFont_wdth,wght.ttf", 16.0f, nullptr);
+    // Tùy chọn phạm vi glyph mặc định
+    //const ImWchar* full_range = io.Fonts->GetGlyphRangesDefault(); // Toàn bộ ký tự cơ bản
 
+    // Nạp font hỗ trợ tiếng Việt
+    io.Fonts->AddFontFromFileTTF("E:/source/AppCoBan/AppCoBan/NotoSans-VariableFont_wdth,wght.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesVietnamese()); // Toàn bộ ký tự cơ bản
+
+    // Xây dựng lại texture cho font
+    //io.Fonts->Build();
 }
 
 GLFWwindow* khoitao_cuaso()

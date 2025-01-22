@@ -73,9 +73,14 @@ void giaodien_menuben(bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kich
     ImGui::SetCursorPos(ImVec2(0.0f, 0.0f));
 
     // Hiển thị chữ "S" hoặc "S caidat" dựa trên trạng thái
-    std::string text = "S caidat";
+    std::string text = "S cầidat";
     int max_chars = std::max(1, static_cast<int>((current_width - collapsed_width) / (expanded_width - collapsed_width) * static_cast<float>(text.size())));
     std::string visible_text = text.substr(0, max_chars);
+
+    // Tính vị trí chữ luôn đặt cố định
+    ImVec2 text_pos = ImGui::GetCursorScreenPos();
+    text_pos.x += 10.0f; // Cách nút 10px theo trục X
+    text_pos.y += 10.0f; // Cách nút 10px theo trục Y
 
     // Vẽ nút
     if (ImGui::Button(" ", button_caidat_size))
@@ -83,11 +88,6 @@ void giaodien_menuben(bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kich
         hienthi_caidat = true;
         ImGui::SetWindowFocus("caidat");
     }
-
-    // Tính vị trí chữ luôn đặt cố định
-    ImVec2 text_pos = ImGui::GetCursorScreenPos();
-    text_pos.x += 10.0f; // Cách nút 10px theo trục X
-    text_pos.y += 10.0f; // Cách nút 10px theo trục Y
 
     // Vẽ chữ
     ImGui::GetWindowDrawList()->AddText(text_pos, ImGui::GetColorU32(ImGuiCol_Text), visible_text.c_str());
@@ -234,17 +234,51 @@ void giaodien_keotha_tep(GLFWwindow* cuaSo, int chieurong_manhinh, int chieucao_
     ImGui::PopStyleVar(); // Khôi phục padding mặc định
 }
 
+void giaodien_bangdulieu(GLFWwindow* cuaSo, bool& hienthi_bangdulieu)
+{
+    static const char* danhSachCheDo[] = { "Cua So", "Toan Man Hinh", "Khong Vien" };
+
+    if (hienthi_bangdulieu)
+    {
+        ImGui::Begin("bangdulieu", &hienthi_bangdulieu);
+
+        // Combo box để chọn chế độ hiển thị
+        if (ImGui::BeginCombo("Che Do Hien Thi", danhSachCheDo[cauhinh_cuaso.chedo]))
+        {
+            for (int i = 0; i < IM_ARRAYSIZE(danhSachCheDo); i++)
+            {
+                bool daChon = (cauhinh_cuaso.chedo == i);
+                if (ImGui::Selectable(danhSachCheDo[i], daChon))
+                {
+                    cauhinh_cuaso.chedo = static_cast<CauHinhCuaSo::chedo_hienthi>(i);
+                    thaydoi_chedo_hienthi(cuaSo, cauhinh_cuaso);
+                }
+                if (daChon)
+                {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+            ImGui::EndCombo();
+        }
+
+        ImGui::End();
+    }
+}
+
+
 void giaodien_test()
 {
+    bool hienThiTest = false;
+    if (!hienThiTest) return;
     ImGui::Begin("test");
 
     //cái phải đúng
     ImGui::SeparatorText("CORRECT");
-    ImGui::Text("Trần NhẤn T&*()_ng˚˖𓍢ִ໋🌷͙֒✧˚.🎀༘⋆");
+    ImGui::Text("Trần NhẤn T&*()_ng");
 
     //Cái sẽ sai
     ImGui::SeparatorText("INCORRECT");
-    ImGui::DebugTextEncoding("Trần Nhân Tông˚˖𓍢ִ໋🌷͙֒✧˚.🎀༘⋆");
+    ImGui::DebugTextEncoding("Trần Nhân Tông");
 
     ImGui::End();
 }
