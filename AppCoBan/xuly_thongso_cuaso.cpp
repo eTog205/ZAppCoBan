@@ -17,7 +17,7 @@ static void caidat_font()
     //const ImWchar* full_range = io.Fonts->GetGlyphRangesDefault(); // Toàn bộ ký tự cơ bản
 
     // Nạp font hỗ trợ tiếng Việt
-    io.Fonts->AddFontFromFileTTF("E:/source/AppCoBan/AppCoBan/NotoSans-VariableFont_wdth,wght.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesVietnamese()); // Toàn bộ ký tự cơ bản
+    io.Fonts->AddFontFromFileTTF("arial.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesVietnamese()); // Toàn bộ ký tự cơ bản
 
     // Xây dựng lại texture cho font
     //io.Fonts->Build();
@@ -70,6 +70,11 @@ GLFWwindow* khoitao_cuaso()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+
     return window;
 }
 
@@ -77,20 +82,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
 {
     // Biến điều khiển
     bool hienthi_caidat = false;
-
-    // Cấu hình màu sắc
-    //ImU32 title_color = ImGui::GetColorU32(ImVec4(0.2f, 0.5f, 0.8f, 1.0f)); // Màu tiêu đề (RGBA)
-    //ImU32 data_color = ImGui::GetColorU32(ImVec4(0.9f, 0.9f, 0.9f, 1.0f));  // Màu dữ liệu (RGBA)
-    //ImU32 column_color = ImGui::GetColorU32(ImVec4(0.8f, 0.8f, 0.8f, 1.0f)); // Màu cột (RGBA)
-    //ImU32 transparent_color = ImGui::GetColorU32(ImVec4(0.0f, 0.0f, 0.0f, 0.0f)); // Màu trong suốt (RGBA)
-
-    // Màu đen trong suốt
-    //ImU32 black_transparent = ImGui::GetColorU32(ImVec4(0, 0, 0, 0.5f));
-
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.Colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.5f, 0.8f, 1.0f);
-    style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.2f, 0.5f, 0.8f, 1.0f);
-    style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.2f, 0.5f, 0.8f, 1.0f);
+	double lastTime = glfwGetTime();
 
     ImVec2 vitri_tinhnang;
     ImVec2 kichthuoc_tinhnang;
@@ -98,6 +90,16 @@ void vonglap_chinh(GLFWwindow* cuaso)
     // Vòng lặp chính
     while (!glfwWindowShouldClose(cuaso))
     {
+		//double tg_hientai = glfwGetTime();
+		//double deltaTime = tg_hientai - lastTime;
+		//lastTime = tg_hientai;
+
+  //      if (deltaTime<(1.0/60.0))
+  //      {
+		//	glfwPollEvents();
+		//	continue;
+  //      }
+
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -118,6 +120,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
         glViewport(0, 0, chieurong_manhinh, chieucao_manhinh);
         glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glFinish();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(cuaso);
     }
