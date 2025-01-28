@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="cuaso.h" />
     <ClInclude Include="giaodien.h" />
+    <ClInclude Include="timvatai.h" />
     <ClInclude Include="xuly_tep.h" />
     <ClInclude Include="xuly_thongso_cuaso.h" />
   </ItemGroup>
@@ -138,6 +139,7 @@
     <ClCompile Include="cuaso.cpp" />
     <ClCompile Include="giaodien.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="timvatai.cpp" />
     <ClCompile Include="xuly_tep.cpp" />
     <ClCompile Include="xuly_thongso_cuaso.cpp" />
   </ItemGroup>

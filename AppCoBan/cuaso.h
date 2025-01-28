@@ -17,7 +17,7 @@ struct CauHinhCuaSo
     // Hàm tạo cấu hình mặc định
     static CauHinhCuaSo macdinh()
     {
-        return { 1024, 700, "tong", cuaso };
+        return { 1024, 700, "Tông", cuaso };
     }
 
 };

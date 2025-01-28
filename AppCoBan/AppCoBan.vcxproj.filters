@@ -27,6 +27,9 @@
     <ClInclude Include="xuly_tep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="timvatai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xuly_thongso_cuaso.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xuly_tep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timvatai.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
