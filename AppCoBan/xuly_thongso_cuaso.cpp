@@ -42,34 +42,6 @@ GLFWwindow* khoitao_cuaso()
         return nullptr;
     }
 
-    std::string categories[MAX_CATEGORIES];
-    PhanMem supportedSoftware[MAX_SOFTWARE];
-    PhanMem installedSoftware[MAX_SOFTWARE];
-
-    // Tải danh sách phân loại
-    int categoryCount = tai_ch_pm("cauhinh_pm.json");
-    if (categoryCount == 0)
-    {
-        std::cerr << "Không thể tải danh sách phân loại." << std::endl;
-        return nullptr;
-    }
-
-    //// Tải danh sách phần mềm hỗ trợ
-    //int supportedCount = tai_ds_pm("cauhinh_pm_ht.json", supportedSoftware, MAX_SOFTWARE);
-    //if (supportedCount == 0)
-    //{
-    //    std::cerr << "Không thể tải danh sách phần mềm hỗ trợ." << std::endl;
-    //    return nullptr;
-    //}
-
-    //// Tải danh sách phần mềm đã cài
-    //int installedCount = tai_ds_pm("cauhinh_pm_cd.json", installedSoftware, MAX_SOFTWARE);
-    //if (installedCount == 0)
-    //{
-    //    std::cerr << "Không thể tải danh sách phần mềm đã cài." << std::endl;
-    //    return nullptr;
-    //}
-
     // Đặt giới hạn kích thước tối thiểu cho cửa sổ
     glfwSetWindowSizeLimits(window, cauhinh_cuaso.chieurong, cauhinh_cuaso.chieucao, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
@@ -110,11 +82,10 @@ GLFWwindow* khoitao_cuaso()
 
 void vonglap_chinh(GLFWwindow* cuaso)
 {
-    GiaoDien gd;
+    ThongSo ts;
 
     // Biến điều khiển
     bool hienthi_caidat = false;
-    double lastTime = glfwGetTime();
 
     ImVec2 vitri_tinhnang;
     ImVec2 kichthuoc_tinhnang;
@@ -132,10 +103,10 @@ void vonglap_chinh(GLFWwindow* cuaso)
         glfwGetFramebufferSize(cuaso, &chieurong_manhinh, &chieucao_manhinh);
 
         // Hiển thị các giao diện
-        giaodien_menuben1(gd, hienthi_caidat, vitri_tinhnang, kichthuoc_tinhnang, chieucao_manhinh);
+        giaodien_menuben1(ts, hienthi_caidat, vitri_tinhnang, kichthuoc_tinhnang, chieucao_manhinh);
         giaodien_caidat(cuaso, hienthi_caidat);
-        giaodien_caidat_cot();
-        giaodien_timvatai(gd, chieurong_manhinh, chieucao_manhinh);
+        //giaodien_caidat_cot();
+        giaodien_timvatai(ts, chieurong_manhinh, chieucao_manhinh);
 
         // Render
         ImGui::Render();

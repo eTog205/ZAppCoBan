@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 
 //std::string thucthi_lenh(const std::string& command)
@@ -121,42 +120,6 @@ int tai_ds_pm(const std::string& tentep, PhanMem ds_PhanMem[], int kt_toida)
         count++;
     }
     return count;
-}
-
-// Hàm tải danh sách phân loại từ tệp JSON
-int tai_ch_pm(const std::string& tentep)
-{
-    std::ifstream file(tentep);
-    if (!file.is_open())
-    {
-        std::cerr << "Không thể mở tệp: " << tentep << std::endl;
-        return false;
-    }
-
-    json jsonData;
-    file >> jsonData;
-
-    // Đọc dữ liệu từ JSON vào mảng tĩnh
-    columnCount = 0;
-    for (const auto& item : jsonData["columns"])
-    {
-        if (columnCount >= max_columns)
-        {
-            break; // Đảm bảo không vượt quá kích thước mảng
-        }
-        columns[columnCount].ten_cot = item["ten"].get<std::string>();   // Lấy giá trị "name"
-        columns[columnCount].hienthi_cot = item.value("hienthi", true);   // Lấy giá trị "visible"
-        columnCount++;
-    }
-
-    // Lấy thông tin "nut" (nút cài đặt tiêu đề)
-    if (jsonData.contains("nut"))
-    {
-        columns[columnCount].ten_nut = jsonData["nut"]["ten"].get<std::string>();
-        columns[columnCount].hienthi_nut = jsonData["nut"].value("hienthi", true);
-    }
-
-    return true;
 }
 
 
