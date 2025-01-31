@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0",
+    "app_name": "SuaKeyTepApp",
+    "author": "eTog205",
+    "release_date": "2025-02-01",
+    "settings": {
+        "theme": "dark",
+        "language": "vi",
+        "auto_update": true
+    },
+    "users": [
+        {
+            "id": 1,
+            "name": "Nguyen Van A",
+            "email": "nguyenvana@example.com"
+        },
+        {
+            "id": 2,
+            "name": "Tran Thi B",
+            "email": "tranthib@example.com"
+        }
+    ]
+}
