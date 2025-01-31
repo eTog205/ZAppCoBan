@@ -129,16 +129,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="csdl.h" />
     <ClInclude Include="cuaso.h" />
     <ClInclude Include="giaodien.h" />
+    <ClInclude Include="tienich.h" />
     <ClInclude Include="timvatai.h" />
     <ClInclude Include="xuly_tep.h" />
     <ClInclude Include="xuly_thongso_cuaso.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="csdl.cpp" />
     <ClCompile Include="cuaso.cpp" />
     <ClCompile Include="giaodien.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="tienich.cpp" />
     <ClCompile Include="timvatai.cpp" />
     <ClCompile Include="xuly_tep.cpp" />
     <ClCompile Include="xuly_thongso_cuaso.cpp" />

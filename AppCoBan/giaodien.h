@@ -10,14 +10,17 @@ using namespace std;
 struct ThongSo
 {
     float botron_nen = 10.0f;       // Bán kính bo tròn góc của các khung hiển thị
-    float botron_nho = 4.0f;
+    float botron_nho = 4.0f;        // Bán kính bo tròn góc của thành phần nhỏ(nút, combo box, ô)
+
+    float chieucao_thanhtieude = 23.0f;
+
     // Kích thước và vị trí của menu bên
-    float chieurong_menuben = 180.0f;  // Chiều rộng menu bên khi mở rộng
-    float chieurong_menuben_thugon = 50.0f; // Chiều rộng menu bên khi thu gọn
+    float chieurong_menuben = 180.0f;        // Chiều rộng menu bên khi mở rộng
+    float chieurong_menuben_thugon = 50.0f;  // Chiều rộng menu bên khi thu gọn
     float chieurong_menuben_morong = 180.0f; // Chiều rộng tối đa khi mở rộng menu
-    float letrai_menuben = 14.0f;      // Khoảng cách từ lề trái của màn hình đến menu bên
-    float letren_menuben = 14.0f;      // Khoảng cách từ lề trên của màn hình đến menu bên
-    float chieucao_menuben = 0.0f;     // Chiều cao menu bên (tính theo chiều cao màn hình)
+    float letrai_menuben = 14.0f;            // Khoảng cách từ lề trái của màn hình đến menu bên
+    float letren_menuben = 125.0f;           // Khoảng cách từ lề trên của màn hình đến menu bên
+    float chieucao_menuben = 0.0f;           // Chiều cao menu bên (tính theo chiều cao màn hình)
 
     // Trạng thái thu gọn/mở rộng của menu bên
     bool menuben_thugon = false;       // Biến trạng thái: true nếu menu đang thu gọn
@@ -27,9 +30,9 @@ struct ThongSo
 
     // Biến dùng trong tìm kiếm và lọc dữ liệu
     char searchBuffer[128] = "";   // Bộ đệm lưu từ khóa tìm kiếm
-    int trangthai_hientai = 0;    // Lựa chọn hiện tại của bộ lọc trạng thái
-    int phienban_hientai = 0;     // Lựa chọn hiện tại của bộ lọc phiên bản
-    int phanloai_hientai = 0;     // Lựa chọn hiện tại của bộ lọc phân loại
+    int trangthai_hientai = 0;     // Lựa chọn hiện tại của bộ lọc trạng thái
+    int phienban_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phiên bản
+    int phanloai_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phân loại
 
     // Cấu hình hiển thị bảng dữ liệu
     static constexpr int soluong_cot = 4; // Số lượng cột hiển thị trong bảng
@@ -41,7 +44,7 @@ struct ThongSo
     // Kích thước và vị trí của bảng dữ liệu
     float chieurong_bang = 0.0f;  // Chiều rộng của bảng dữ liệu
     float letrai_bang = 14.0f;    // Khoảng cách từ lề trái của màn hình đến bảng dữ liệu
-    float letren_bang = 14.0f;    // Khoảng cách từ lề trên của màn hình đến bảng dữ liệu
+    float letren_bang = 125.0f;   // Khoảng cách từ lề trên của màn hình đến bảng dữ liệu
     float chieucao_bang = 0.0f;   // Chiều cao của bảng dữ liệu (tính theo chiều cao màn hình)
 };
 

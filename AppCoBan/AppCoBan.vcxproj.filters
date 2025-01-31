@@ -30,6 +30,12 @@
     <ClInclude Include="timvatai.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="tienich.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="csdl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xuly_thongso_cuaso.cpp">
@@ -48,6 +54,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="timvatai.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tienich.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="csdl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

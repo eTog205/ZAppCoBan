@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-
+#include "csdl.h"
 
 static void caidat_font()
 {
@@ -83,7 +83,7 @@ GLFWwindow* khoitao_cuaso()
 void vonglap_chinh(GLFWwindow* cuaso)
 {
     ThongSo ts;
-
+    capnhat_data();
     // Biến điều khiển
     bool hienthi_caidat = false;
 

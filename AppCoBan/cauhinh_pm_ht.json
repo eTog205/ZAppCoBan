@@ -2,13 +2,11 @@
     {
         "id": "Google.Chrome",
         "name": "Google Chrome",
-        "version_latest": "132.0.6834.111",
         "category": "Trình duyệt"
     },
     {
         "id": "Notepad++.Notepad++",
         "name": "Notepad++",
-        "version_latest": "8.7.5",
         "category": "Tài liệu"
     }
 ]

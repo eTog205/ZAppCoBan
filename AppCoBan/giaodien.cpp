@@ -47,7 +47,7 @@ void giaodien_menuben1(ThongSo& ts, bool& hienthi_caidat, ImVec2& vitri_tinhnang
     float chieurong_hientai = ts.chieurong_menuben;
 
     // Cập nhật chiều cao menu
-    ts.chieucao_menuben = static_cast<float>(chieucao_manhinh) - 28;
+    ts.chieucao_menuben = static_cast<float>(chieucao_manhinh) - ts.letren_menuben;
 
     // Xử lý thu gọn menu
     handle_collapse(
@@ -207,7 +207,7 @@ void comboBox_(const char* label, const char* options[], int options_count, int&
 void giaodien_timvatai(ThongSo& ts, const int chieurong_manhinh, const int chieucao_manhinh)
 {
     ts.chieurong_bang = static_cast<float>(chieurong_manhinh) - ts.letrai_menuben * 3 - ts.chieurong_menuben; // Chiều rộng hiện tại của menu bên
-    ts.chieucao_bang = static_cast<float>(chieucao_manhinh) - 28;
+    ts.chieucao_bang = static_cast<float>(chieucao_manhinh) - ts.letren_bang;
     ts.letrai_bang = ts.chieurong_menuben + ts.letrai_menuben * 2;
 
     ImGui::SetNextWindowPos(ImVec2(ts.letrai_bang, ts.letren_bang));
