@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="chucnang_coban.h" />
     <ClInclude Include="csdl.h" />
     <ClInclude Include="cuaso.h" />
     <ClInclude Include="giaodien.h" />
@@ -139,6 +140,7 @@
     <ClInclude Include="xuly_thongso_cuaso.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="chucnang_coban.cpp" />
     <ClCompile Include="csdl.cpp" />
     <ClCompile Include="cuaso.cpp" />
     <ClCompile Include="giaodien.cpp" />

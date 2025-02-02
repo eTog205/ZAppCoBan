@@ -1,4 +1,5 @@
 ﻿//giaodien.cpp
+#include "chucnang_coban.h"
 #include "cuaso.h"
 #include "dv_csdl.h"
 #include "giaodien.h"
@@ -250,7 +251,6 @@ void capNhatBangPhanMem(giaodien& gd, const logic_giaodien& lg_gd)
     }
 }
 
-
 // Hàm giao diện để tìm và cài đặt phần mềm từ winget
 void giaodien_bangdl(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
 {
@@ -281,8 +281,20 @@ void giaodien_thanhcongcu(const giaodien& gd, const int chieurong_manhinh, const
 
     ImGui::Begin("thanh công cụ", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
-    ImGui::Button("nút tải về");
 
+    if (ImGui::Button("nút tải về"))
+    {
+        for (const auto& item : gd.selected_map)
+        {
+            if (item.second)
+            {
+                chaylenh(item.first);
+            }
+        }
+    } /*else
+    {
+        std::cout << "Chưa có dòng nào được chọn." << std::endl;
+    }*/
     ImGui::End();
 }
 
