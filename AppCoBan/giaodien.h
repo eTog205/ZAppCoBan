@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿//giaodien.h
+#pragma once
 
 #include "logic_giaodien.h"
 
@@ -12,7 +13,6 @@ using namespace std;
 
 struct giaodien
 {
-    int soLuongPhanMemTruocDo = 0;
     float botron_nen = 10.0f;       // Bán kính bo tròn góc của các khung hiển thị
     float botron_nho = 4.0f;        // Bán kính bo tròn góc của thành phần nhỏ(nút, combo box, ô)
 
@@ -40,7 +40,7 @@ struct giaodien
 
     //logic_giaodien lg_gd;
     // Cấu hình hiển thị bảng dữ liệu
-    bool hienthi_cot[3] = { true,false, true }; // Trạng thái hiển thị của từng cột
+    bool hienthi_cot[4] = { true,true,false,true }; // Trạng thái hiển thị của từng cột
 
     bool hienthi_caidat_cot = false;  // Trạng thái hiển thị menu bật/tắt các cột trong bảng(mặc định: false ẩn lúc ban đầu, true: hiện lên lúc ban đầu)
 
@@ -66,9 +66,11 @@ void giaodien_menuben1(giaodien& gd, bool& hienthi_caidat, ImVec2& vitri_tinhnan
 
 void giaodien_caidat(GLFWwindow* cuaSo, bool& hienthi_caidat);
 
-void capNhatBangPhanMem(giaodien& gd, logic_giaodien& lg_gd);
+void comboBox_(const char* label, const char* options[], int options_count, int& currentSelection, float gt_botron);
 
-void giaodien_timvatai(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+void capNhatBangPhanMem(giaodien& gd, const logic_giaodien& lg_gd);
+
+void giaodien_bangdl(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
 
 void giaodien_thanhcongcu(const giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh);
 

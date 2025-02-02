@@ -1,15 +1,8 @@
-
-#include "timvatai.h"
+//dv_csdl.cpp
+#include "csdl.h"
+#include "dv_csdl.h"
 
 #include <iostream>
-
-#include "csdl.h"
-
-//#include <fstream>
-//#include <iostream>
-//
-//
-//PhanMem pm;
 
 //std::string thucthi_lenh(const std::string& command)
 //{
@@ -86,52 +79,6 @@
 //    std::string daloc_dauvao = loc_toi_n(dau_vao);
 //
 //    return daloc_dauvao;
-//}
-
-// Hàm tải danh sách phần mềm từ csdl
-// Hàm nạp dữ liệu từ JSON
-//bool napDuLieuTuJSON(const std::string& filePath)
-//{
-//    std::ifstream file(filePath);
-//    if (!file.is_open())
-//    {
-//        std::cerr << "Không thể mở tệp JSON: " << filePath << std::endl;
-//        return false;
-//    }
-//
-//    json duLieu;
-//    file >> duLieu;  // Đọc dữ liệu JSON
-//    file.close();
-//
-//    // Xác định số lượng phần mềm
-//    pm.soLuongPhanMem = static_cast<int>(duLieu.size());
-//
-//    if (pm.soLuongPhanMem == 0) return false;
-//
-//    // Cấp phát bộ nhớ động
-//    pm.danhSachPhanMem = new PhanMem[pm.soLuongPhanMem];
-//
-//    // Nạp dữ liệu vào mảng động
-//    for (int i = 0; i < pm.soLuongPhanMem; i++)
-//    {
-//        pm.danhSachPhanMem[i].id = duLieu[i]["id"].get<std::string>();
-//        pm.danhSachPhanMem[i].name = duLieu[i]["name"].get<std::string>();
-//        pm.danhSachPhanMem[i].category = duLieu[i]["category"].get<std::string>();
-//    }
-//
-//    //std::cout << "Đã nạp " << soLuongPhanMem << " phần mềm từ JSON." << std::endl;
-//    return true;
-//}
-//
-//// Hàm giải phóng bộ nhớ khi không còn cần thiết
-//void giaiPhongBoNho()
-//{
-//    if (pm.danhSachPhanMem)
-//    {
-//        delete[] pm.danhSachPhanMem;
-//        pm.danhSachPhanMem = nullptr;
-//        pm.soLuongPhanMem = 0;
-//    }
 //}
 
 void LogicXuLy::nap_du_lieu(giaodien& gd)

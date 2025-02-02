@@ -1,8 +1,8 @@
 ﻿
 #include "csdl.h"
 #include "cuaso.h"
+#include "dv_csdl.h"
 #include "giaodien.h"
-#include "timvatai.h"
 #include "xuly_thongso_cuaso.h"
 
 #include <imgui.h>
@@ -27,8 +27,6 @@ static void caidat_font()
 
 GLFWwindow* khoitao_cuaso()
 {
-    //napdulieubandau();
-
     // Khởi tạo ImGui
     if (!glfwInit())
     {
@@ -52,10 +50,10 @@ GLFWwindow* khoitao_cuaso()
     const GLFWvidmode* mode = glfwGetVideoMode(manhinh_chinh);
 
     // Tính toán vị trí để căn giữa cửa sổ
-    int chieu_rong_cuaso = cauhinh_cuaso.chieurong;
-    int chieu_cao_cuaso = cauhinh_cuaso.chieucao;
-    int vitri_x = (mode->width - chieu_rong_cuaso) / 2;
-    int vitri_y = (mode->height - chieu_cao_cuaso) / 2;
+    const int chieu_rong_cuaso = cauhinh_cuaso.chieurong;
+    const int chieu_cao_cuaso = cauhinh_cuaso.chieucao;
+    const int vitri_x = (mode->width - chieu_rong_cuaso) / 2;
+    const int vitri_y = (mode->height - chieu_cao_cuaso) / 2;
 
     // Đặt vị trí cửa sổ
     glfwSetWindowPos(window, vitri_x, vitri_y);
@@ -89,7 +87,6 @@ void vonglap_chinh(GLFWwindow* cuaso)
     giaodien gd;
     LogicXuLy::nap_du_lieu(gd);
 
-
     // Biến điều khiển
     bool hienthi_caidat = false;
 
@@ -111,7 +108,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
         // Hiển thị các giao diện
         giaodien_menuben1(gd, hienthi_caidat, vitri_tinhnang, kichthuoc_tinhnang, chieucao_manhinh);
         giaodien_caidat(cuaso, hienthi_caidat);
-        giaodien_timvatai(gd, chieurong_manhinh, chieucao_manhinh);
+        giaodien_bangdl(gd, chieurong_manhinh, chieucao_manhinh);
         giaodien_thanhcongcu(gd, chieurong_manhinh, chieucao_manhinh);
 
         // Render
@@ -129,7 +126,6 @@ void dondep(GLFWwindow* cuaso)
 {
     close_database();
 
-    // Dọn dẹp
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

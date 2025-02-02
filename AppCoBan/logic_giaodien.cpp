@@ -1,3 +1,4 @@
+//logic_giaodien.cpp
 #include "logic_giaodien.h"
 
 void them_cot(logic_giaodien& lg_gd, const std::string& tenmoi)
@@ -34,3 +35,5 @@ void khoitao_logic_giaodien(logic_giaodien& lg_gd)
 {
     them_cot(lg_gd, "id", "Tên", "Phân loại");
 }
+
+

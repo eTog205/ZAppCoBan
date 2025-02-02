@@ -134,7 +134,7 @@
     <ClInclude Include="giaodien.h" />
     <ClInclude Include="logic_giaodien.h" />
     <ClInclude Include="tienich.h" />
-    <ClInclude Include="timvatai.h" />
+    <ClInclude Include="dv_csdl.h" />
     <ClInclude Include="xuly_tep.h" />
     <ClInclude Include="xuly_thongso_cuaso.h" />
   </ItemGroup>
@@ -145,7 +145,7 @@
     <ClCompile Include="logic_giaodien.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tienich.cpp" />
-    <ClCompile Include="timvatai.cpp" />
+    <ClCompile Include="dv_csdl.cpp" />
     <ClCompile Include="xuly_tep.cpp" />
     <ClCompile Include="xuly_thongso_cuaso.cpp" />
   </ItemGroup>

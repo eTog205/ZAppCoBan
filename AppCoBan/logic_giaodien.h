@@ -1,3 +1,4 @@
+//logic_giaodien.h
 #pragma once
 #include <xstring>
 

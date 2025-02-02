@@ -1,3 +1,4 @@
+//csdl.cpp
 #include "csdl.h"
 
 #include <boost/beast/core.hpp>
@@ -112,7 +113,7 @@ std::string fetch_github_data(const std::string& owner, const std::string& repo,
     const std::string target = "/repos/" + owner + "/" + repo + "/contents/" + file_path;
 
     std::string response = send_http_request(host, target, token);
-
+    std::cout << "response: \n" << response << "\n";
     if (response.empty())
     {
         std::cerr << "❌ Không thể tải dữ liệu từ GitHub\n";
@@ -120,20 +121,20 @@ std::string fetch_github_data(const std::string& owner, const std::string& repo,
     }
 
     // Kiểm tra nếu phản hồi là JSON metadata thay vì nội dung thực
-    try
-    {
-        auto json_response = nlohmann::json::parse(response);
-
-        if (json_response.contains("encoding") && json_response["encoding"] == "base64")
-        {
-            const std::string base64_content = json_response["content"];
-            return decode_base64(base64_content);
-        }
-    } catch (...)
-    {
-        // Nếu lỗi parse JSON, có thể nội dung đã là raw data
-        throw;
-    }
+    //try
+    //{
+    //    auto json_response = nlohmann::json::parse(response);
+    //    std::cout << "json_response: \n" << json_response;
+    //    if (json_response.contains("encoding") && json_response["encoding"] == "base64")
+    //    {
+    //        const std::string base64_content = json_response["content"];
+    //        return decode_base64(base64_content);
+    //    }
+    //} catch (...)
+    //{
+    //    // Nếu lỗi parse JSON, có thể nội dung đã là raw data
+    //    throw;
+    //}
 
     return response;
 }
@@ -159,10 +160,10 @@ std::string fetch_github_file_metadata(const std::string& owner, const std::stri
 // 🔹 Hàm lưu nội dung ra file
 void save_to_file(const std::string& filename, const std::string& data)
 {
-    std::ofstream outFile(filename);
+    std::ofstream outFile(filename, std::ios::binary);
     if (outFile)
     {
-        outFile << data;
+        outFile.write(data.data(), data.size());
         outFile.close();
         std::cout << "✅ Nội dung được lưu vào file: " << filename << std::endl;
     } else
@@ -386,13 +387,15 @@ void khoidong_sql()
     std::cout << "Kiểm tra sql ....";
     if (!database_exists("sql.db"))
     {
-        std::cout << "1. csdl không tồn tại ban đầu sẽ được tạo\n";
+        std::cout << "\n1. csdl không tồn tại\n";
     }
-
+    std::cout << "\n1. csdl đã tồn tại \n";
     if (open_database_read_only("sql.db") != SQLITE_OK)
     {
         std::cout << "2. không mở được sql!\n";
     }
+    std::cout << "2. mở được sql \n";
+
     std::cout << "các kiểm tra đã thực hiện xong\n";
 }
 
