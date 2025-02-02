@@ -1,15 +1,15 @@
 ﻿
+#include "csdl.h"
 #include "cuaso.h"
 #include "giaodien.h"
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 #include "timvatai.h"
 #include "xuly_thongso_cuaso.h"
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include <iostream>
 
-#include "csdl.h"
 
 static void caidat_font()
 {
@@ -27,6 +27,8 @@ static void caidat_font()
 
 GLFWwindow* khoitao_cuaso()
 {
+    //napdulieubandau();
+
     // Khởi tạo ImGui
     if (!glfwInit())
     {
@@ -82,8 +84,12 @@ GLFWwindow* khoitao_cuaso()
 
 void vonglap_chinh(GLFWwindow* cuaso)
 {
-    ThongSo ts;
+    khoidong_sql();
     capnhat_data();
+    giaodien gd;
+    LogicXuLy::nap_du_lieu(gd);
+
+
     // Biến điều khiển
     bool hienthi_caidat = false;
 
@@ -103,10 +109,10 @@ void vonglap_chinh(GLFWwindow* cuaso)
         glfwGetFramebufferSize(cuaso, &chieurong_manhinh, &chieucao_manhinh);
 
         // Hiển thị các giao diện
-        giaodien_menuben1(ts, hienthi_caidat, vitri_tinhnang, kichthuoc_tinhnang, chieucao_manhinh);
+        giaodien_menuben1(gd, hienthi_caidat, vitri_tinhnang, kichthuoc_tinhnang, chieucao_manhinh);
         giaodien_caidat(cuaso, hienthi_caidat);
-        //giaodien_caidat_cot();
-        giaodien_timvatai(ts, chieurong_manhinh, chieucao_manhinh);
+        giaodien_timvatai(gd, chieurong_manhinh, chieucao_manhinh);
+        giaodien_thanhcongcu(gd, chieurong_manhinh, chieucao_manhinh);
 
         // Render
         ImGui::Render();
@@ -121,6 +127,8 @@ void vonglap_chinh(GLFWwindow* cuaso)
 
 void dondep(GLFWwindow* cuaso)
 {
+    close_database();
+
     // Dọn dẹp
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

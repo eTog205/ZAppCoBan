@@ -1,14 +1,18 @@
 ﻿#pragma once
-#include "imgui.h"
+
+#include "logic_giaodien.h"
 
 #include <chrono>
 #include <GLFW/glfw3.h>
+#include <imgui.h>
+#include <unordered_map>
 
 using namespace std;
 
 
-struct ThongSo
+struct giaodien
 {
+    int soLuongPhanMemTruocDo = 0;
     float botron_nen = 10.0f;       // Bán kính bo tròn góc của các khung hiển thị
     float botron_nho = 4.0f;        // Bán kính bo tròn góc của thành phần nhỏ(nút, combo box, ô)
 
@@ -34,10 +38,9 @@ struct ThongSo
     int phienban_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phiên bản
     int phanloai_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phân loại
 
+    //logic_giaodien lg_gd;
     // Cấu hình hiển thị bảng dữ liệu
-    static constexpr int soluong_cot = 4; // Số lượng cột hiển thị trong bảng
-    string ten_cot[soluong_cot] = { "Trạng thái", "Tên", "Phiên bản", "Phân loại" }; // Tên các cột trong bảng
-    bool hienthi_cot[soluong_cot] = { true, true, true, true }; // Trạng thái hiển thị của từng cột
+    bool hienthi_cot[3] = { true,false, true }; // Trạng thái hiển thị của từng cột
 
     bool hienthi_caidat_cot = false;  // Trạng thái hiển thị menu bật/tắt các cột trong bảng(mặc định: false ẩn lúc ban đầu, true: hiện lên lúc ban đầu)
 
@@ -46,16 +49,27 @@ struct ThongSo
     float letrai_bang = 14.0f;    // Khoảng cách từ lề trái của màn hình đến bảng dữ liệu
     float letren_bang = 125.0f;   // Khoảng cách từ lề trên của màn hình đến bảng dữ liệu
     float chieucao_bang = 0.0f;   // Chiều cao của bảng dữ liệu (tính theo chiều cao màn hình)
+
+    int row_count = 0;
+
+    std::vector<std::vector<std::string>> data;
+
+    unordered_map<std::string, bool> selected_map;
+
 };
 
 void handle_collapse(bool& is_collapsed, bool& collapse_requested, const std::chrono::steady_clock::time_point& collapse_start_time, float& current_size, float expanded_size, float collapsed_size, float delay_seconds);
 
 ImVec4 AdjustColorBrightness(const ImVec4& color, float factor);
 
-void giaodien_menuben1(ThongSo& ts, bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kichthuoc_tinhnang, const int chieucao_manhinh);
+void giaodien_menuben1(giaodien& gd, bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kichthuoc_tinhnang, const int chieucao_manhinh);
 
 void giaodien_caidat(GLFWwindow* cuaSo, bool& hienthi_caidat);
 
-void giaodien_timvatai(ThongSo& ts, int chieurong_manhinh, int chieucao_manhinh);
+void capNhatBangPhanMem(giaodien& gd, logic_giaodien& lg_gd);
+
+void giaodien_timvatai(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+
+void giaodien_thanhcongcu(const giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh);
 
 

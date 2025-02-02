@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 
+sqlite3* db = nullptr;
+
 // 🔹 Hàm giải mã AES-128-CBC
 std::string decrypt_aes(const std::string& ciphertext)
 {
@@ -103,7 +105,7 @@ std::string send_http_request(const std::string& host, const std::string& target
     }
 }
 
-// 🔹 Hàm lấy nội dung `data.json` từ GitHub API
+// 🔹 Hàm lấy nội dung `sql.db` từ GitHub API
 std::string fetch_github_data(const std::string& owner, const std::string& repo, const std::string& file_path, const std::string& token)
 {
     const std::string host = "api.github.com";
@@ -151,7 +153,7 @@ std::string fetch_github_file_metadata(const std::string& owner, const std::stri
         return "";
     }
 
-    return response; // Trả về JSON metadata của commit
+    return response; // Trả về metadata của commit
 }
 
 // 🔹 Hàm lưu nội dung ra file
@@ -211,8 +213,8 @@ void capnhat_data()
     // Cấu hình repository và file cần lấy
     const std::string owner = "eTog205";
     const std::string repo = "SuaKeyTepApp";
-    const std::string file_path = "cauhinh_pm_ht.json";
-    const std::string sha_file = "cauhinh_pm_ht.sha";
+    const std::string file_path = "sql.db";
+    const std::string sha_file = "sql.sha";
 
     // 🔹 Kiểm tra xem tệp SHA có tồn tại không
     std::ifstream sha_file_in(sha_file);
@@ -240,7 +242,7 @@ void capnhat_data()
             metadata_json = nlohmann::json::parse(metadata_response);
         } catch (const std::exception& e)
         {
-            std::cerr << "❌ Lỗi khi parse metadata JSON: " << e.what() << std::endl;
+            std::cerr << "❌ Lỗi khi parse metadata: " << e.what() << std::endl;
             return;
         }
 
@@ -266,7 +268,7 @@ void capnhat_data()
     std::string new_data = fetch_github_data(owner, repo, file_path, decrypted_token);
     if (!new_data.empty())
     {
-        save_to_file("cauhinh_pm_ht.json", new_data);
+        save_to_file("sql.db", new_data);
 
         // 🔹 Lưu SHA mới vào file để sử dụng lần sau
         std::ofstream sha_file_out(sha_file);
@@ -304,6 +306,95 @@ void capnhat_data()
         std::cout << "✅ Đã cập nhật dữ liệu và lưu SHA mới.\n";
     } else
     {
-        std::cerr << "❌ Lỗi khi tải dữ liệu `cauhinh_pm_ht.json`\n";
+        std::cerr << "❌ Lỗi khi tải dữ liệu `sql.db`\n";
     }
 }
+
+int open_database_read_only(const char* dbName)
+{
+    return sqlite3_open_v2(dbName, &db, SQLITE_OPEN_READONLY, nullptr);
+}
+
+void close_database()
+{
+    if (db)
+    {
+        sqlite3_close(db);
+        db = nullptr;
+    }
+}
+
+int get_row_count(const char* table_name, int* row_count)
+{
+    *row_count = 0;
+    const std::string sql = "SELECT COUNT(*) FROM " + std::string(table_name) + ";";
+    sqlite3_stmt* stmt;
+
+    int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        //std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return rc;
+    }
+
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW)
+    {
+        *row_count = sqlite3_column_int(stmt, 0);
+    } else
+    {
+        std::cerr << "Failed to execute statement: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    return (rc == SQLITE_ROW) ? SQLITE_OK : rc;
+}
+
+// Hàm thực thi SQL với xử lý lỗi
+int execute_sql(const char* sql)
+{
+    char* errMsg = nullptr;
+    const int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
+
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Lỗi SQL: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+    }
+
+    return rc;
+}
+
+// Tạo bảng nếu chưa có
+int create_table()
+{
+    const auto sql = "CREATE TABLE IF NOT EXISTS Items ("
+        "ID TEXT PRIMARY KEY, "
+        "Name TEXT NOT NULL, "
+        "Category TEXT);";
+
+    return execute_sql(sql);
+}
+
+bool database_exists(const char* db_name)
+{
+    return std::filesystem::exists(db_name);
+}
+
+void khoidong_sql()
+{
+    std::cout << "Kiểm tra sql ....";
+    if (!database_exists("sql.db"))
+    {
+        std::cout << "1. csdl không tồn tại ban đầu sẽ được tạo\n";
+    }
+
+    if (open_database_read_only("sql.db") != SQLITE_OK)
+    {
+        std::cout << "2. không mở được sql!\n";
+    }
+    std::cout << "các kiểm tra đã thực hiện xong\n";
+}
+
+
+

@@ -27,15 +27,15 @@ void thaydoi_chedo_hienthi(GLFWwindow* cuaso, const CauHinhCuaSo& cauhinh)
 
             glfwSetWindowAttrib(cuaso, GLFW_DECORATED, GLFW_FALSE); // Không viền
             glfwSetWindowPos(cuaso, 0, 0); // Đặt vị trí góc trên bên trái
-            glfwSetWindowMonitor(cuaso,nullptr,0,0, chedo_manhinh->width, chedo_manhinh->height, chedo_manhinh->refreshRate); // Đặt kích thước phù hợp
+            glfwSetWindowMonitor(cuaso, nullptr, 0, 0, chedo_manhinh->width, chedo_manhinh->height, chedo_manhinh->refreshRate); // Đặt kích thước phù hợp
             break;
         }
-//else // KhongVien
-//            {
-//                glfwSetWindowAttrib(cuaso, GLFW_DECORATED, GLFW_FALSE); // Không viền
-//                glfwSetWindowMonitor(cuaso, nullptr, 0, 0, chedo_manhinh->width, chedo_manhinh->height, 0);
-//            }
-//            break;
-//        }
+        //else // KhongVien
+        //            {
+        //                glfwSetWindowAttrib(cuaso, GLFW_DECORATED, GLFW_FALSE); // Không viền
+        //                glfwSetWindowMonitor(cuaso, nullptr, 0, 0, chedo_manhinh->width, chedo_manhinh->height, 0);
+        //            }
+        //            break;
+        //        }
     }
 }

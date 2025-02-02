@@ -1,27 +1,22 @@
 #pragma once
 //#include <boost/process.hpp>
-#include <nlohmann/json.hpp>
-#include <string>
 
-
-constexpr auto MAX_SOFTWARE = 100;
-constexpr auto MAX_CATEGORIES = 10;
-
-// Mảng tĩnh lưu tối đa 10 cột
-constexpr int max_columns = 10;
-inline int columnCount = 0; // Số lượng cột thực tế
+//#include <nlohmann/json.hpp>
+//#include <string>
+//using json = nlohmann::json;
 
 // Cấu trúc lưu thông tin phần mềm
-struct PhanMem
-{
-    std::string id;
-    std::string ten;
-    std::string phienban_caidat;
-    std::string phienban_moinhat;
-    std::string phanloai;
-};
+//struct PhanMem
+//{
+//    std::string id;
+//    std::string trangthai;
+//    std::string name;
+//    std::string version;
+//    std::string category;
+//    PhanMem* danhSachPhanMem = nullptr;
+//    int soLuongPhanMem = 0;
+//};
 
-using json = nlohmann::json;
 //namespace bp = boost::process;
 
 // Hàm thực thi lệnh hệ thống và lấy kết quả
@@ -29,7 +24,16 @@ using json = nlohmann::json;
 //std::string loc_toi_n(const std::string& input);
 //std::string laydauvao(const std::string& tukhoa);
 
+//bool napDuLieuTuJSON(const std::string& filePath);
+//void giaiPhongBoNho();
 
-bool tai_tep_json(const std::string& tentep, json& dl_json);
-int tai_ds_pm(const std::string& tentep, PhanMem ds_PhanMem[], int kt_toida);
 
+//dv_csdl.h
+#include "giaodien.h"
+
+// Lớp trung gian xử lý logic
+class LogicXuLy
+{
+public:
+    static void nap_du_lieu(giaodien& gd);
+};

@@ -1,9 +1,15 @@
 
 #include "timvatai.h"
 
-#include <fstream>
 #include <iostream>
 
+#include "csdl.h"
+
+//#include <fstream>
+//#include <iostream>
+//
+//
+//PhanMem pm;
 
 //std::string thucthi_lenh(const std::string& command)
 //{
@@ -82,44 +88,80 @@
 //    return daloc_dauvao;
 //}
 
-// Hàm đọc tệp JSON vào đối tượng JSON
-bool tai_tep_json(const std::string& tentep, json& dl_json)
-{
-    std::ifstream file(tentep);
-    if (!file.is_open())
-    {
-        std::cerr << "Không thể mở tệp: " << tentep << std::endl;
-        return false;
-    }
-    file >> dl_json;
-    file.close();
-    return !dl_json.is_discarded();
-}
+// Hàm tải danh sách phần mềm từ csdl
+// Hàm nạp dữ liệu từ JSON
+//bool napDuLieuTuJSON(const std::string& filePath)
+//{
+//    std::ifstream file(filePath);
+//    if (!file.is_open())
+//    {
+//        std::cerr << "Không thể mở tệp JSON: " << filePath << std::endl;
+//        return false;
+//    }
+//
+//    json duLieu;
+//    file >> duLieu;  // Đọc dữ liệu JSON
+//    file.close();
+//
+//    // Xác định số lượng phần mềm
+//    pm.soLuongPhanMem = static_cast<int>(duLieu.size());
+//
+//    if (pm.soLuongPhanMem == 0) return false;
+//
+//    // Cấp phát bộ nhớ động
+//    pm.danhSachPhanMem = new PhanMem[pm.soLuongPhanMem];
+//
+//    // Nạp dữ liệu vào mảng động
+//    for (int i = 0; i < pm.soLuongPhanMem; i++)
+//    {
+//        pm.danhSachPhanMem[i].id = duLieu[i]["id"].get<std::string>();
+//        pm.danhSachPhanMem[i].name = duLieu[i]["name"].get<std::string>();
+//        pm.danhSachPhanMem[i].category = duLieu[i]["category"].get<std::string>();
+//    }
+//
+//    //std::cout << "Đã nạp " << soLuongPhanMem << " phần mềm từ JSON." << std::endl;
+//    return true;
+//}
+//
+//// Hàm giải phóng bộ nhớ khi không còn cần thiết
+//void giaiPhongBoNho()
+//{
+//    if (pm.danhSachPhanMem)
+//    {
+//        delete[] pm.danhSachPhanMem;
+//        pm.danhSachPhanMem = nullptr;
+//        pm.soLuongPhanMem = 0;
+//    }
+//}
 
-// Hàm tải danh sách phần mềm từ tệp JSON
-int tai_ds_pm(const std::string& tentep, PhanMem ds_PhanMem[], int kt_toida)
+void LogicXuLy::nap_du_lieu(giaodien& gd)
 {
-    json jsonData;
-    if (!tai_tep_json(tentep, jsonData))
+    int row_count = 0;
+    if (get_row_count("Items", &row_count) == SQLITE_OK && row_count > 0)
     {
-        return 0;
+        gd.row_count = row_count;
     }
 
-    int count = 0;
-    for (const auto& item : jsonData)
+    gd.data.clear();
+
+    const std::string sql = "SELECT ID, Name, Category FROM Items;";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
     {
-        if (count >= kt_toida)
+        while (sqlite3_step(stmt) == SQLITE_ROW)
         {
-            break; // Đảm bảo không vượt quá kích thước mảng
+            std::vector<std::string> row;
+            row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0))); // ID
+            row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1))); // Name
+            row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))); // Category
+            gd.data.push_back(row);
         }
-        ds_PhanMem[count].id = item.value("id", "");
-        ds_PhanMem[count].ten = item.value("name", "");
-        ds_PhanMem[count].phienban_caidat = item.value("version_installed", "");
-        ds_PhanMem[count].phienban_moinhat = item.value("version_latest", "");
-        ds_PhanMem[count].phanloai = item.value("category", "");
-        count++;
+    } else
+    {
+        std::cerr << "Lỗi lấy dữ liệu từ Items!" << std::endl;
     }
-    return count;
-}
 
+    sqlite3_finalize(stmt);
+}
 

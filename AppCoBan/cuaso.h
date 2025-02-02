@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <vector>
 
 
 // Định nghĩa cấu trúc dữ liệu cho cấu hình
@@ -19,12 +18,9 @@ struct CauHinhCuaSo
     {
         return { 1024, 700, "Tông", cuaso };
     }
-
 };
 
 inline CauHinhCuaSo cauhinh_cuaso = CauHinhCuaSo::macdinh();
-inline std::vector<std::string> dropped_files;
-//inline bool is_hovered = false;
 
 // Hàm thay đổi chế độ hiển thị
 void thaydoi_chedo_hienthi(GLFWwindow* cuaso, const CauHinhCuaSo& cauhinh);
