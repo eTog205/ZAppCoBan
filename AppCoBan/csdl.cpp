@@ -384,19 +384,8 @@ bool database_exists(const char* db_name)
 
 void khoidong_sql()
 {
-    std::cout << "Kiểm tra sql ....";
-    if (!database_exists("sql.db"))
-    {
-        std::cout << "\n1. csdl không tồn tại\n";
-    }
-    std::cout << "\n1. csdl đã tồn tại \n";
-    if (open_database_read_only("sql.db") != SQLITE_OK)
-    {
-        std::cout << "2. không mở được sql!\n";
-    }
-    std::cout << "2. mở được sql \n";
-
-    std::cout << "các kiểm tra đã thực hiện xong\n";
+    open_database_read_only("sql.db");
+    std::cout << "1. bắt đầu mở csdl \n";
 }
 
 

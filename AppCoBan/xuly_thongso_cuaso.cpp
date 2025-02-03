@@ -82,8 +82,9 @@ GLFWwindow* khoitao_cuaso()
 
 void vonglap_chinh(GLFWwindow* cuaso)
 {
-    khoidong_sql();
     capnhat_data();
+    khoidong_sql();
+
     giaodien gd;
     LogicXuLy::nap_du_lieu(gd);
 

@@ -227,14 +227,13 @@ void capNhatBangPhanMem(giaodien& gd, const logic_giaodien& lg_gd)
             // Cột checkbox: dùng ID của dòng (giả sử gd.data[row][0] là ID duy nhất)
             ImGui::TableSetColumnIndex(0);
             std::string id = gd.data[row][0];
-            // Sử dụng trực tiếp biến lưu trạng thái trong selected_map (toán tử [] tạo giá trị mặc định false nếu chưa tồn tại)
-            //ImGui::Checkbox(("##check" + std::to_string(row)).c_str(), &gd.selected_map[id]);
 
+            // Sử dụng trực tiếp biến lưu trạng thái trong selected_map (toán tử [] tạo giá trị mặc định false nếu chưa tồn tại)
             if (ImGui::Checkbox(("##check" + std::to_string(row)).c_str(), &gd.selected_map[id]))
             {
                 // Khi trạng thái checkbox thay đổi, in ra thông tin dòng
-                std::cout << "Row " << row << " (ID: " << id << ") is now "
-                    << (gd.selected_map[id] ? "selected" : "deselected") << std::endl;
+                /*std::cout << "Row " << row << " (ID: " << id << ") is now "
+                    << (gd.selected_map[id] ? "selected" : "deselected") << std::endl;*/
             }
 
             // Các cột dữ liệu: hiển thị nội dung của từng ô
@@ -291,10 +290,8 @@ void giaodien_thanhcongcu(const giaodien& gd, const int chieurong_manhinh, const
                 chaylenh(item.first);
             }
         }
-    } /*else
-    {
-        std::cout << "Chưa có dòng nào được chọn." << std::endl;
-    }*/
+    }
+
     ImGui::End();
 }
 

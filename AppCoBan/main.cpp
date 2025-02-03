@@ -1,6 +1,8 @@
 ﻿
 #include "xuly_thongso_cuaso.h"
 
+#pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+
 int main()
 {
     GLFWwindow* cuaso = khoitao_cuaso();
@@ -10,7 +12,5 @@ int main()
     vonglap_chinh(cuaso);
 
     dondep(cuaso);
-
-
 
 }
