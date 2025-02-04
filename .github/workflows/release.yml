@@ -1,0 +1,63 @@
+name: Build and Release on Windows
+
+# Workflow sẽ kích hoạt khi có push một tag có định dạng bắt đầu bằng "v" (ví dụ: v1.0.0)
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Bước 1: Checkout mã nguồn từ repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Bước 2: Cấu hình dự án sử dụng CMake với Visual Studio (ví dụ: Visual Studio 2022)
+      - name: Configure Project
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Visual Studio 17 2022"
+        shell: cmd
+
+      # Bước 3: Build dự án (chọn cấu hình Release)
+      - name: Build Project
+        run: |
+          cd build
+          cmake --build . --config Release
+        shell: cmd
+
+      # Bước 4: Đóng gói ứng dụng thành file nén (zip)
+      - name: Package Application
+        run: |
+          # Nếu file my_app.zip đã tồn tại thì xóa nó trước
+          if (Test-Path my_app.zip) { Remove-Item my_app.zip }
+          # Sử dụng PowerShell để nén toàn bộ nội dung trong thư mục build thành my_app.zip
+          Compress-Archive -Path build\* -DestinationPath my_app.zip
+        shell: pwsh
+
+      # Bước 5: Tạo Release mới trên GitHub
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      # Bước 6: Upload file zip vừa tạo lên release
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./my_app.zip
+          asset_name: my_app.zip
+          asset_content_type: application/zip
