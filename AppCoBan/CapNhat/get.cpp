@@ -64,7 +64,9 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 		http::write(stream, req);
 
 		beast::flat_buffer buffer;
-		http::response<http::string_body> res;
+		//http::response<http::string_body> res;
+		http::response<http::dynamic_body> res;
+
 		http::read(stream, buffer, res);
 
 		if (res.result() == http::status::found || res.result() == http::status::temporary_redirect || res.result() == http::status::permanent_redirect)
@@ -88,9 +90,19 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 		beast::error_code ec;
 		// Đóng socket của tầng dưới mà không chờ thông báo close_notify của TLS
 		stream.next_layer().socket().shutdown(tcp::socket::shutdown_both, ec);
-		stream.next_layer().socket().close(ec);
+		if (ec)
+		{
+			td_log(loai_log::loi, "[send_http_request] Lỗi khi shutdown socket: " + ec.message());
+		}
 
-		return res.body();
+		stream.next_layer().socket().close(ec);
+		if (ec)
+		{
+			td_log(loai_log::loi, "[send_http_request] Lỗi khi đóng socket: " + ec.message());
+		}
+
+		//return res.body();
+		return buffers_to_string(res.body().data());
 	} catch (const std::exception& e)
 	{
 		td_log(loai_log::loi, "[send_http_request] Ngoại lệ: " + std::string(e.what()));

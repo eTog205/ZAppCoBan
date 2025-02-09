@@ -2,7 +2,6 @@
 #include "log_nhalam.h"
 
 #include <fstream>
-#include <iostream>
 
 using namespace chrono;
 
@@ -29,13 +28,13 @@ string lay_thoigian()
 
 // Hàm đảm bảo rằng thư mục log tồn tại. Nếu chưa có thì tạo mới.
 // Tham số newlyCreated sẽ được đặt là true nếu thư mục được tạo mới.
-bool dambao_thumuc_log_tontai(const fs::path& thumuc_log, bool& newly_created)
+bool dambao_thumuc_log_tontai(const fs::path& thumuc_log, bool& taomoi)
 {
-	newly_created = false;
+	taomoi = false;
 	if (!exists(thumuc_log))
 	{
 		if (create_directory(thumuc_log))
-			newly_created = true;
+			taomoi = true;
 		else
 			return false;
 	}
@@ -103,7 +102,7 @@ void thongdiep_log(const loai_log loai, const string& ten_tep, const string& tho
 	ofstream out_file(lg.teplog_hientai, ios::app);
 	if (!out_file)
 	{
-		cerr << "Lỗi: Không thể mở tệp log để ghi thông điệp.\n";
+		//cerr << "Lỗi: Không thể mở tệp log để ghi thông điệp.\n";
 		return;
 	}
 

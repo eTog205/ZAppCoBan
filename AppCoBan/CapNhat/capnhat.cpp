@@ -2,7 +2,6 @@
 #include "capnhat.h"
 #include "log_nhalam.h"
 
-#include <chrono>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
@@ -17,9 +16,7 @@ string doctep_phienban1(const string& tentep)
 	string dong;
 
 	if (!tep.is_open())
-	{
 		return dong;
-	}
 
 	getline(tep, dong);
 
@@ -48,15 +45,11 @@ int loc_dl(const string& dauvao)
 	for (const char ch : dauvao)
 	{
 		if (isdigit(ch))
-		{
 			kq.push_back(ch);
-		}
 	}
 
 	if (kq.empty())
-	{
 		return 0;
-	}
 
 	try
 	{
@@ -113,12 +106,8 @@ void kiemtra_va_capnhat()
 			ghitep_phienban("phienban.txt", dl_doi_dinhdang);
 			td_log(loai_log::thong_bao, "Cập nhật hoàn tất phiên bản " + dl_doi_dinhdang);
 		} else
-		{
 			td_log(loai_log::loi, "Không thể tải xuống bản cập nhật!");
-		}
 	} else
-	{
 		td_log(loai_log::thong_bao, "Phiên bản hiện tại (" + dinhdang_dl(so_hientai_daloc) + ") đã mới nhất.");
-	}
 }
 

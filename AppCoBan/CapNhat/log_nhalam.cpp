@@ -15,10 +15,7 @@ string lay_thoigian()
 	const zoned_time local_time{ current_zone(), now };
 
 	// Làm tròn thời gian cục bộ xuống giây (loại bỏ phần thập phân)
-	auto local_time_sec = zoned_time{
-		local_time.get_time_zone(),
-		floor<seconds>(local_time.get_local_time())
-	};
+	auto local_time_sec = zoned_time{ local_time.get_time_zone(), floor<seconds>(local_time.get_local_time()) };
 
 	//	Định dạng thời gian theo thứ tự: giây-phút-giờ ngày-tháng-năm
 	//	%S: giây, %M: phút, %H: giờ, %d: ngày, %m: tháng, %Y: năm
@@ -29,13 +26,13 @@ string lay_thoigian()
 
 // Hàm đảm bảo rằng thư mục log tồn tại. Nếu chưa có thì tạo mới.
 // Tham số newlyCreated sẽ được đặt là true nếu thư mục được tạo mới.
-bool dambao_thumuc_log_tontai(const fs::path& thumuc_log, bool& newly_created)
+bool dambao_thumuc_log_tontai(const fs::path& thumuc_log, bool& taomoi)
 {
-	newly_created = false;
+	taomoi = false;
 	if (!exists(thumuc_log))
 	{
 		if (create_directory(thumuc_log))
-			newly_created = true;
+			taomoi = true;
 		else
 			return false;
 	}
@@ -69,9 +66,7 @@ bool taotep_logmoi(const fs::path& thumuc_log, const fs::path& teplog_hientai, s
 
 	ofstream out_file(teplog_hientai, ios::out);
 	if (!out_file)
-	{
 		return false;
-	}
 
 	out_file << thoigian_dau_log << "\n";
 	out_file.close();
@@ -84,12 +79,13 @@ bool khoidong_log()
 {
 	log_nhalam lg;
 	bool created = false;
+
 	if (!dambao_thumuc_log_tontai(lg.thumuc_log, created))
 		return false;
+
 	if (!created)
-	{  // Nếu thư mục đã tồn tại, xử lý tệp log hiện tại.
+		// Nếu thư mục đã tồn tại, xử lý tệp log hiện tại.
 		xuly_teplog_hientai(lg.thumuc_log, lg.teplog_hientai);
-	}
 
 	return taotep_logmoi(lg.thumuc_log, lg.teplog_hientai, lg.thoigian_dau_log);
 }
@@ -102,10 +98,8 @@ void thongdiep_log(const loai_log loai, const string& ten_tep, const string& tho
 
 	ofstream out_file(lg.teplog_hientai, ios::app);
 	if (!out_file)
-	{
-		cerr << "Lỗi: Không thể mở tệp log để ghi thông điệp.\n";
+		//cerr << "Lỗi: Không thể mở tệp log để ghi thông điệp.\n";
 		return;
-	}
 
 	const string time_str = lay_thoigian();
 	string type_str;
