@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{8d06c773-0345-4a64-820b-06537f326e10}</ProjectGuid>
-    <RootNamespace>AppCoBan</RootNamespace>
+    <ProjectGuid>{cdb3e5be-12be-4a96-8917-76914204cb73}</ProjectGuid>
+    <RootNamespace>CapNhat</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,6 +70,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\CapNhat\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\CapNhat\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -104,8 +108,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,36 +125,22 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="chucnang_coban.h" />
-    <ClInclude Include="csdl.h" />
-    <ClInclude Include="cuaso.h" />
-    <ClInclude Include="giaodien.h" />
-    <ClInclude Include="logic_giaodien.h" />
+    <ClInclude Include="capnhat.h" />
+    <ClInclude Include="get.h" />
     <ClInclude Include="log_nhalam.h" />
-    <ClInclude Include="tienich.h" />
-    <ClInclude Include="dv_csdl.h" />
-    <ClInclude Include="xuly_tep.h" />
-    <ClInclude Include="xuly_thongso_cuaso.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="chucnang_coban.cpp" />
-    <ClCompile Include="csdl.cpp" />
-    <ClCompile Include="cuaso.cpp" />
-    <ClCompile Include="giaodien.cpp" />
-    <ClCompile Include="logic_giaodien.cpp" />
+    <ClCompile Include="capnhat.cpp" />
+    <ClCompile Include="CL_CapNhat.cpp" />
+    <ClCompile Include="get.cpp" />
     <ClCompile Include="log_nhalam.cpp" />
-    <ClCompile Include="CL_PhanMem.cpp" />
-    <ClCompile Include="tienich.cpp" />
-    <ClCompile Include="dv_csdl.cpp" />
-    <ClCompile Include="xuly_tep.cpp" />
-    <ClCompile Include="xuly_thongso_cuaso.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

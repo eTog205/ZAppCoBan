@@ -25,6 +25,9 @@
     <Filter Include="công cụ">
       <UniqueIdentifier>{3ba3e362-cb48-4cae-89c4-8a82d9f291fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{5dfffd1d-8f67-4ac3-bf2c-e425ff29cd25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xuly_thongso_cuaso.h">
@@ -54,12 +57,15 @@
     <ClInclude Include="chucnang_coban.h">
       <Filter>công cụ</Filter>
     </ClInclude>
+    <ClInclude Include="log_nhalam.h">
+      <Filter>log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xuly_thongso_cuaso.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="CL_PhanMem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cuaso.cpp">
@@ -85,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="chucnang_coban.cpp">
       <Filter>công cụ</Filter>
+    </ClCompile>
+    <ClCompile Include="log_nhalam.cpp">
+      <Filter>log</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
