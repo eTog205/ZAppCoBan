@@ -7,10 +7,6 @@
 
 bool launch_updater()
 {
-#ifdef _DEBUG
-	return false;
-
-#else
 	// Đường dẫn tương đối đến updater.exe (nằm trong thư mục con "CapNhat" của working directory hiện tại)
 	const auto updater_relative_path = L"CapNhat\\CapNhat.exe";
 	HINSTANCE result = ShellExecute(nullptr, L"open", updater_relative_path, nullptr, nullptr, SW_HIDE);
@@ -27,6 +23,4 @@ bool launch_updater()
 
 	td_log(loai_log::thong_bao, "Khởi chạy updater thành công.");
 	return true;
-
-#endif
 }

@@ -1,6 +1,6 @@
 //capnhat.cpp
+#include "../log_nhalam.h"
 #include "capnhat.h"
-#include "log_nhalam.h"
 
 #include <fstream>
 #include <iomanip>

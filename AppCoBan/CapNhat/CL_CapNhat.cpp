@@ -1,7 +1,7 @@
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
+#include "../log_nhalam.h"
 #include "capnhat.h"
-#include "log_nhalam.h"
 
 int main()
 {

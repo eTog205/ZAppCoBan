@@ -134,13 +134,11 @@
   <ItemGroup>
     <ClInclude Include="capnhat.h" />
     <ClInclude Include="get.h" />
-    <ClInclude Include="log_nhalam.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="capnhat.cpp" />
     <ClCompile Include="CL_CapNhat.cpp" />
     <ClCompile Include="get.cpp" />
-    <ClCompile Include="log_nhalam.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

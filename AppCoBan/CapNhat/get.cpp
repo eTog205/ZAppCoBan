@@ -1,6 +1,6 @@
 //get.cpp
+#include "../log_nhalam.h"
 #include "get.h"
-#include "log_nhalam.h"
 
 #include <boost/beast/ssl.hpp>
 #include <boost/beast/version.hpp>
