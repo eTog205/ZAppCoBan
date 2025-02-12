@@ -6,7 +6,6 @@
 #include <boost/beast/version.hpp>
 #include <fstream>
 
-
 std::string send_http_request(const std::string& url, bool is_asset, int redirect_count)
 {
 	if (redirect_count > 5)
@@ -64,15 +63,15 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 		http::write(stream, req);
 
 		beast::flat_buffer buffer;
-		//http::response<http::string_body> res;
-		http::response<http::dynamic_body> res;
+
+		http::response_parser<http::dynamic_body> res;
 
 		http::read(stream, buffer, res);
 
-		if (res.result() == http::status::found || res.result() == http::status::temporary_redirect || res.result() == http::status::permanent_redirect)
+		if (res.get().result() == http::status::found || res.get().result() == http::status::temporary_redirect || res.get().result() == http::status::permanent_redirect)
 		{
-			auto loc = res.find(http::field::location);
-			if (loc != res.end())
+			auto loc = res.get().find(http::field::location);
+			if (loc != res.get().end())
 			{
 				auto new_url = std::string(loc->value().data(), loc->value().size());
 				return send_http_request(new_url, is_asset, redirect_count + 1);
@@ -81,9 +80,9 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 			return "";
 		}
 
-		if (res.result() != http::status::ok)
+		if (res.get().result() != http::status::ok)
 		{
-			td_log(loai_log::loi, "[send_http_request] HTTP lỗi: " + std::to_string(static_cast<int>(res.result())));
+			td_log(loai_log::loi, "[send_http_request] HTTP lỗi: " + std::to_string(static_cast<int>(res.get().result())));
 			return "";
 		}
 
@@ -101,8 +100,7 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 			td_log(loai_log::loi, "[send_http_request] Lỗi khi đóng socket: " + ec.message());
 		}
 
-		//return res.body();
-		return buffers_to_string(res.body().data());
+		return buffers_to_string(res.get().body().data());
 	} catch (const std::exception& e)
 	{
 		td_log(loai_log::loi, "[send_http_request] Ngoại lệ: " + std::string(e.what()));
@@ -110,7 +108,6 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 	}
 }
 
-// 🔹 Phân tích phản hồi JSON
 json::value parse_json_response(const std::string& response_body)
 {
 	try
@@ -149,7 +146,6 @@ std::string get_release_tag()
 	return tag_name;
 }
 
-// Hàm download_file: tải nội dung từ URL và ghi ra file (ở chế độ binary)
 bool download_file(const std::string& url, const std::string& save_path)
 {
 	const std::string file_content = send_http_request(url, true);
@@ -177,6 +173,7 @@ bool download_file(const std::string& url, const std::string& save_path)
 
 bool download_latest_release()
 {
+	duan da;
 	const std::string host = "api.github.com";
 	const std::string target = "/repos/eTog205/SuaKeyTepApp/releases/latest";
 
@@ -211,14 +208,13 @@ bool download_latest_release()
 	const auto download_url = json::value_to<std::string>(asset["browser_download_url"]);
 
 	// Lấy tên tệp gốc từ asset (trường "name")
-	std::string file_name;
 	if (asset.contains("name"))
 	{
-		file_name = json::value_to<std::string>(asset["name"]);
+		da.tentep = json::value_to<std::string>(asset["name"]);
 	} else
 	{
-		file_name = "ZTOG.zip";
+		da.tentep = "ZTOG.zip";
 	}
 
-	return download_file(download_url, file_name);
+	return download_file(download_url, da.tentep);
 }

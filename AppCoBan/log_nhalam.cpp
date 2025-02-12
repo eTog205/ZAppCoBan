@@ -3,9 +3,9 @@
 
 #include <fstream>
 
-using namespace chrono;
+using namespace std::chrono;
 
-string lay_thoigian()
+std::string lay_thoigian()
 {
 	// Lấy thời gian hiện tại từ hệ thống
 	const auto now = system_clock::now();
@@ -48,9 +48,9 @@ void xuly_teplog_hientai(const fs::path& thumuc_log, const fs::path& teplog_hien
 {
 	if (exists(teplog_hientai))
 	{
-		if (ifstream in_file(teplog_hientai); in_file.is_open())
+		if (std::ifstream in_file(teplog_hientai); in_file.is_open())
 		{
-			if (string dongdau; getline(in_file, dongdau) && !dongdau.empty())
+			if (std::string dongdau; getline(in_file, dongdau) && !dongdau.empty())
 			{
 				in_file.close();
 				const fs::path new_file_path = thumuc_log / (dongdau + ".txt");
@@ -62,11 +62,10 @@ void xuly_teplog_hientai(const fs::path& thumuc_log, const fs::path& teplog_hien
 }
 
 // Hàm tạo tệp log mới ("hientai.txt") và ghi dòng đầu tiên chứa thời gian tạo log.
-bool taotep_logmoi(const fs::path& thumuc_log, const fs::path& teplog_hientai, string& thoigian_dau_log)
+bool taotep_logmoi(const fs::path& thumuc_log, const fs::path& teplog_hientai, std::string& thoigian_dau_log)
 {
 	thoigian_dau_log = lay_thoigian();
-
-	ofstream out_file(teplog_hientai, ios::out);
+	std::ofstream out_file(teplog_hientai, std::ios::out);
 	if (!out_file)
 	{
 		return false;
@@ -95,23 +94,22 @@ bool khoidong_log()
 
 // Hàm ghi một thông điệp log vào tệp log hiện tại. 
 // Các loại log: "THÔNG BÁO", "CẢNH BÁO", "LỖI".
-void thongdiep_log(const loai_log loai, const string& ten_tep, const string& thongdiep)
+void thongdiep_log(const loai_log loai, const std::string& ten_tep, const std::string& thongdiep)
 {
 	const log_nhalam lg;
-
-	ofstream out_file(lg.teplog_hientai, ios::app);
+	std::ofstream out_file(lg.teplog_hientai, std::ios::app);
 	if (!out_file)
 	{
 		//cerr << "Lỗi: Không thể mở tệp log để ghi thông điệp.\n";
 		return;
 	}
 
-	const string time_str = lay_thoigian();
-	string type_str;
+	const std::string time_str = lay_thoigian();
+	std::string type_str;
 	switch (loai)
 	{
 		case loai_log::thong_bao:
-			type_str = "THÔNG BÁO";
+			type_str = "✅THÔNG BÁO";
 			break;
 		case loai_log::canh_bao:
 			type_str = "CẢNH BÁO";

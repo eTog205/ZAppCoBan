@@ -27,6 +27,12 @@
     <ClInclude Include="get.h">
       <Filter>GET github</Filter>
     </ClInclude>
+    <ClInclude Include="giainen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\log_nhalam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CL_CapNhat.cpp">
@@ -37,6 +43,12 @@
     </ClCompile>
     <ClCompile Include="get.cpp">
       <Filter>GET github</Filter>
+    </ClCompile>
+    <ClCompile Include="giainen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\log_nhalam.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

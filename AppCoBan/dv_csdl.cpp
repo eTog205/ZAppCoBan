@@ -1,10 +1,7 @@
 //dv_csdl.cpp
 #include "csdl.h"
 #include "dv_csdl.h"
-
-#include <iostream>
-
-
+#include "log_nhalam.h"
 
 void LogicXuLy::nap_du_lieu(giaodien& gd)
 {
@@ -31,7 +28,7 @@ void LogicXuLy::nap_du_lieu(giaodien& gd)
 		}
 	} else
 	{
-		//std::cerr << "Lỗi lấy dữ liệu từ Items!" << std::endl;
+		td_log(loai_log::loi, "lấy dữ liệu từ Items!");
 	}
 
 	sqlite3_finalize(stmt);

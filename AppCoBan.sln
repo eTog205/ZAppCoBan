@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppCoBan", "AppCoBan\AppCoBan.vcxproj", "{8D06C773-0345-4A64-820B-06537F326E10}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CapNhat", "AppCoBan\CapNhat\CapNhat.vcxproj", "{CDB3E5BE-12BE-4A96-8917-76914204CB73}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8D06C773-0345-4A64-820B-06537F326E10} = {8D06C773-0345-4A64-820B-06537F326E10}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

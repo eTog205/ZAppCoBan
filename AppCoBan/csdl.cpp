@@ -1,10 +1,11 @@
 //csdl.cpp
 #include "csdl.h"
+#include "log_nhalam.h"
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/core/detail/base64.hpp>
 #include <fstream>
-#include <iostream>
+
 
 sqlite3* db = nullptr;
 
@@ -70,8 +71,7 @@ std::string send_http_request(const std::string& host, const std::string& target
 
 	} catch (const std::exception& e)
 	{
-		//std::cerr << "❌ Lỗi HTTP Request: " << e.what() << std::endl;
-
+		td_log(loai_log::loi, "HTTP Request: " + std::string(e.what()));
 		return "";
 	}
 }
@@ -84,10 +84,9 @@ std::string fetch_github_data(const std::string& owner, const std::string& repo,
 	const std::string target = "/repos/" + owner + "/" + repo + "/contents/" + file_path;
 
 	std::string response = send_http_request(host, target);
-	std::cout << "response: \n" << response << "\n";
 	if (response.empty())
 	{
-		std::cerr << "❌ Không thể tải dữ liệu từ GitHub\n";
+		td_log(loai_log::loi, "Không thể tải dữ liệu từ GitHub");
 		return "";
 	}
 
@@ -104,11 +103,11 @@ std::string fetch_github_file_metadata(const std::string& owner, const std::stri
 
 	if (response.empty())
 	{
-		std::cerr << "❌ Không thể lấy metadata của file từ GitHub\n";
+		td_log(loai_log::loi, "Không thể lấy metadata của file từ GitHub");
 		return "";
 	}
 
-	return response; // Trả về metadata của commit
+	return response;
 }
 
 // 🔹 Hàm lưu nội dung ra file
@@ -119,12 +118,9 @@ void save_to_file(const std::string& filename, const std::string& data)
 	{
 		outFile.write(data.data(), data.size());
 		outFile.close();
-		//std::cout << "✅ Nội dung được lưu vào file: " << filename << std::endl;
-		//log thông báo
 	} else
 	{
-		//std::cerr << "❌ Lỗi khi ghi file: " << filename << std::endl;
-		//log lỗi
+		td_log(loai_log::loi, "ghi file:" + std::string(filename));
 	}
 }
 
@@ -141,15 +137,15 @@ void luu_tepsha(const std::string& sha_file, const std::string& owner, const std
 			if (metadata_json.contains("sha"))
 			{
 				const std::string new_sha = metadata_json["sha"];
-				//std::cout << "🔹 SHA mới nhận được từ GitHub: " << new_sha << std::endl;
 				sha_file_out << new_sha;
 			} else
 			{
-				//std::cerr << "❌ Metadata không chứa `sha`!\n";
+				td_log(loai_log::loi, "Metadata không chứa `sha`");
 			}
 		} else
 		{
-			//std::cerr << "❌ Không nhận được metadata từ GitHub.\n";
+			td_log(loai_log::loi, "Không nhận được metadata từ GitHub.");
+
 		}
 		sha_file_out.close();
 	}
@@ -157,7 +153,6 @@ void luu_tepsha(const std::string& sha_file, const std::string& owner, const std
 
 void capnhat_data()
 {
-	//bỏ lấy bên get
 	// Cấu hình repository
 	const std::string owner = "eTog205";
 	const std::string repo = "SuaKeyTepApp";
@@ -181,7 +176,7 @@ void capnhat_data()
 		std::string metadata_response = fetch_github_file_metadata(owner, repo, file_path);
 		if (metadata_response.empty())
 		{
-			//std::cerr << "❌ Không thể lấy metadata từ GitHub.\n";
+			td_log(loai_log::loi, "Không thể lấy metadata từ GitHub ");
 			return;
 		}
 
@@ -192,13 +187,14 @@ void capnhat_data()
 			metadata_json = nlohmann::json::parse(metadata_response);
 		} catch (const std::exception& e)
 		{
-			//std::cerr << "❌ Lỗi khi parse metadata: " << e.what() << std::endl;
+			td_log(loai_log::loi, "khi parse metadata: " + std::string(e.what()));
 			return;
 		}
 
 		if (!metadata_json.is_array() || metadata_json.empty() || !metadata_json[0].contains("sha"))
 		{
-			//std::cerr << "❌ Metadata không chứa thông tin `sha`.\n";
+
+			td_log(loai_log::loi, "Metadata không chứa thông tin `sha` ");
 			return;
 		}
 
@@ -207,13 +203,12 @@ void capnhat_data()
 		// 🔹 Nếu SHA không thay đổi, không cần tải lại
 		if (old_sha == new_sha)
 		{
-			//std::cout << "✅ Dữ liệu không thay đổi (SHA trùng khớp), không cần tải lại.\n";
 			return;
 		}
 	}
 
 	// 🔹 Nếu tệp SHA không tồn tại hoặc SHA đã thay đổi, tải file mới
-	std::cout << "🔄 Dữ liệu mới có phiên bản cập nhật, tiến hành tải...\n";
+	td_log(loai_log::thong_bao, "🔄 Dữ liệu mới có phiên bản cập nhật, tiến hành tải...");
 
 	std::string new_data = fetch_github_data(owner, repo, file_path);
 	if (!new_data.empty())
@@ -238,23 +233,23 @@ void capnhat_data()
 						sha_file_out << new_sha;
 					} else
 					{
-						//std::cerr << "❌ JSON không chứa thông tin `sha`, kiểm tra phản hồi!\n";
+						td_log(loai_log::loi, "JSON không chứa thông tin `sha`, kiểm tra phản hồi!");
 					}
 				} catch (const std::exception& e)
 				{
-					//std::cerr << "❌ Lỗi khi parse JSON metadata: " << e.what() << std::endl;
+					td_log(loai_log::loi, "khi parse JSON metadata: " + std::string(e.what()));
 				}
 			} else
 			{
-				//std::cerr << "❌ Không nhận được metadata từ GitHub.\n";
+				td_log(loai_log::loi, "Không nhận được metadata từ GitHub");
 			}
 			sha_file_out.close();
 		}
-		//std::cout << "✅ Đã cập nhật dữ liệu và lưu SHA mới.\n";
-		// thông báo trên giao diện và log
+		td_log(loai_log::thong_bao, "Đã cập nhật dữ liệu và lưu SHA mới.");
 	} else
 	{
-		//std::cerr << "❌ Lỗi khi tải dữ liệu `sql.db`\n";
+		td_log(loai_log::loi, "tải dữ liệu `sql.db`");
+
 	}
 }
 
@@ -281,7 +276,7 @@ int get_row_count(const char* table_name, int* row_count)
 	int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK)
 	{
-		//std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+		td_log(loai_log::loi, "Failed to prepare statement" + std::string(sqlite3_errmsg(db)));
 		return rc;
 	}
 
@@ -291,7 +286,7 @@ int get_row_count(const char* table_name, int* row_count)
 		*row_count = sqlite3_column_int(stmt, 0);
 	} else
 	{
-		//std::cerr << "Failed to execute statement: " << sqlite3_errmsg(db) << std::endl;
+		td_log(loai_log::loi, "Failed to execute statement:" + std::string(sqlite3_errmsg(db)));
 	}
 
 	sqlite3_finalize(stmt);
@@ -301,13 +296,13 @@ int get_row_count(const char* table_name, int* row_count)
 // Hàm thực thi SQL với xử lý lỗi
 int execute_sql(const char* sql)
 {
-	char* errMsg = nullptr;
-	const int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
+	char* err_msg = nullptr;
+	const int rc = sqlite3_exec(db, sql, nullptr, nullptr, &err_msg);
 
 	if (rc != SQLITE_OK)
 	{
-		//std::cerr << "Lỗi SQL: " << errMsg << std::endl;
-		sqlite3_free(errMsg);
+		td_log(loai_log::loi, "SQL" + std::string(err_msg));
+		sqlite3_free(err_msg);
 	}
 
 	return rc;
@@ -332,7 +327,6 @@ bool database_exists(const char* db_name)
 void khoidong_sql()
 {
 	open_database_read_only("sql.db");
-	//std::cout << "1. bắt đầu mở csdl \n";
 }
 
 

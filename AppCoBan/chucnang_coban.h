@@ -1,3 +1,4 @@
+//chucnang_coban.h
 #pragma once
 #include <boost/process.hpp>
 #include <string>
@@ -5,6 +6,6 @@
 namespace bp = boost::process;
 
 // Hàm thực thi lệnh hệ thống và lấy kết quả
-std::string thucthi_lenh(const std::string& command);
+std::string thucthi_lenh(const std::string& lenh);
 
-void chaylenh(const std::string& id);
+void chaylenh(const std::string& id, const std::string& tuychon_them = "");

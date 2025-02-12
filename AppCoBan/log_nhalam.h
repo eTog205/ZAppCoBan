@@ -2,8 +2,7 @@
 #include <filesystem>
 #include <string>
 
-using namespace std;
-namespace fs = filesystem;
+namespace fs = std::filesystem;
 
 #define td_log(loai, thongdiep) thongdiep_log(loai, fs::path(__FILE__).filename().string(), thongdiep)
 
@@ -19,7 +18,7 @@ struct log_nhalam
 {
 	fs::path thumuc_log;     // Thư mục chứa log
 	fs::path teplog_hientai; // Đường dẫn tệp log hiện tại ("hientai.txt")
-	string thoigian_dau_log; // Thời gian tạo log (dòng đầu của tệp)
+	std::string thoigian_dau_log; // Thời gian tạo log (dòng đầu của tệp)
 
 	explicit log_nhalam(const fs::path& dir = "log")
 		: thumuc_log(dir), teplog_hientai(dir / "hientai.txt")
@@ -27,10 +26,10 @@ struct log_nhalam
 	}
 };
 
-string lay_thoigian();
+std::string lay_thoigian();
 
 bool dambao_thumuc_log_tontai(const fs::path& thumuc_log, bool& taomoi);
 void xuly_teplog_hientai(const fs::path& thumuc_log, const fs::path& teplog_hientai);
-bool taotep_logmoi(const fs::path& thumuc_log, const fs::path& teplog_hientai, string& thoigian_dau_log);
-void thongdiep_log(loai_log loai, const string& ten_tep, const string& thongdiep);
+bool taotep_logmoi(const fs::path& thumuc_log, const fs::path& teplog_hientai, std::string& thoigian_dau_log);
+void thongdiep_log(loai_log loai, const std::string& ten_tep, const std::string& thongdiep);
 bool khoidong_log();

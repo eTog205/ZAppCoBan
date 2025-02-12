@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include <GLFW/glfw3.h>
 
-using namespace std;
-
+void caidat_font();
 
 // Khởi tạo cửa sổ và ImGui
 GLFWwindow* khoitao_cuaso();

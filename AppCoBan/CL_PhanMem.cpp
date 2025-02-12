@@ -1,15 +1,12 @@
-﻿#pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+﻿//CL_PhanMem.cpp
+#pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
 #include "log_nhalam.h"
-#include "tienich.h"
 #include "xuly_thongso_cuaso.h"
-
 
 int main()
 {
 	khoidong_log();
-
-	launch_updater();
 
 	GLFWwindow* cuaso = khoitao_cuaso();
 	if (!cuaso)

@@ -33,12 +33,6 @@
     <ClInclude Include="xuly_thongso_cuaso.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="xuly_tep.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tienich.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cuaso.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,12 +63,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cuaso.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xuly_tep.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tienich.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="csdl.cpp">
