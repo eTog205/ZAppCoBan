@@ -28,6 +28,7 @@ void caidat_font()
 
 GLFWwindow* khoitao_cuaso()
 {
+	//td_log(loai_log::thong_bao, "Phần mềm khởi động");
 	// Khởi tạo ImGui
 	if (!glfwInit())
 	{
@@ -95,6 +96,8 @@ void vonglap_chinh(GLFWwindow* cuaso)
 	ImVec2 vitri_tinhnang;
 	ImVec2 kichthuoc_tinhnang;
 
+	td_log(loai_log::thong_bao, "Vòng lặp chính khởi động");
+
 	// Vòng lặp chính
 	while (!glfwWindowShouldClose(cuaso))
 	{
@@ -126,6 +129,8 @@ void vonglap_chinh(GLFWwindow* cuaso)
 
 void dondep(GLFWwindow* cuaso)
 {
+	//td_log(loai_log::thong_bao, "Dọn dẹp khởi động");
+
 	close_database();
 
 	ImGui_ImplOpenGL3_Shutdown();

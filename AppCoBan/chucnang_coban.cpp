@@ -51,3 +51,4 @@ void chaylenh(const std::string& id, const std::string& tuychon_them)
 
 	thucthi_lenh(lenh);
 }
+

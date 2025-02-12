@@ -1,12 +1,14 @@
 ﻿//CL_PhanMem.cpp
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
-#include "log_nhalam.h"
 #include "xuly_thongso_cuaso.h"
+
+#include "log_nhalam.h"
 
 int main()
 {
-	khoidong_log();
+	int mode = 0;
+	g_logger = chuyendoi(mode);
 
 	GLFWwindow* cuaso = khoitao_cuaso();
 	if (!cuaso)
@@ -15,4 +17,11 @@ int main()
 	vonglap_chinh(cuaso);
 
 	dondep(cuaso);
+
+	if (mode == 1)
+	{
+		flush_memory_logs_to_file();
+	}
+
+	spdlog::shutdown();
 }

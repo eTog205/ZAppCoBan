@@ -1,10 +1,10 @@
+//log_nhalam.h
 #pragma once
+
 #include <filesystem>
-#include <string>
+#include <spdlog/spdlog.h>
 
 namespace fs = std::filesystem;
-
-#define td_log(loai, thongdiep) thongdiep_log(loai, fs::path(__FILE__).filename().string(), thongdiep)
 
 // Kiểu enum lưu trữ loại log
 enum class loai_log :uint8_t
@@ -14,22 +14,34 @@ enum class loai_log :uint8_t
 	loi
 };
 
-struct log_nhalam
-{
-	fs::path thumuc_log;     // Thư mục chứa log
-	fs::path teplog_hientai; // Đường dẫn tệp log hiện tại ("hientai.txt")
-	std::string thoigian_dau_log; // Thời gian tạo log (dòng đầu của tệp)
+// Lấy thời gian hiện tại theo định dạng "YYYY-MM-DD_HH-MM-SS"
+std::string lay_dinhdang_tg_hientai1();
 
-	explicit log_nhalam(const fs::path& dir = "log")
-		: thumuc_log(dir), teplog_hientai(dir / "hientai.txt")
-	{
-	}
-};
+// Hàm quay vòng file log
+void quayvong_log(const fs::path& thumuc_log, const fs::path& log_hientai);
 
-std::string lay_thoigian();
+// Macro ghi log
+#define td_log(loai, thongdiep) \
+    do { \
+        const auto tentep = fs::path(__FILE__).filename().string(); \
+        if ((loai) == loai_log::thong_bao) { \
+            g_logger->info("[✅Thông báo] ({}): {}", tentep, thongdiep); \
+        } else if ((loai) == loai_log::canh_bao) { \
+            g_logger->warn("[⚠️Cảnh báo] ({}): {}", tentep, thongdiep); \
+        } else if ((loai) == loai_log::loi) { \
+            g_logger->error("[❌Lỗi] ({}): {}", tentep, thongdiep); \
+        } \
+    } while(0)
 
-bool dambao_thumuc_log_tontai(const fs::path& thumuc_log, bool& taomoi);
-void xuly_teplog_hientai(const fs::path& thumuc_log, const fs::path& teplog_hientai);
-bool taotep_logmoi(const fs::path& thumuc_log, const fs::path& teplog_hientai, std::string& thoigian_dau_log);
-void thongdiep_log(loai_log loai, const std::string& ten_tep, const std::string& thongdiep);
-bool khoidong_log();
+// Đối tượng logger toàn cục dùng trong toàn dự án
+extern std::shared_ptr<spdlog::logger> g_logger;
+
+// Hàm chuyển đổi chế độ log:
+// Nếu mode == 1 => sử dụng chế độ mới (memory sink)
+// Nếu mode == 0 => sử dụng chế độ cũ (file sink)
+std::shared_ptr<spdlog::logger> chuyendoi(int mode);
+
+// Nếu dùng chế độ mới, dùng hàm này để ghi log từ bộ nhớ ra file trước shutdown.
+void flush_memory_logs_to_file();
+
+
