@@ -6,7 +6,6 @@
 #include "log_nhalam.h"
 #include "xuly_thongso_cuaso.h"
 
-
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -91,7 +90,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
 	giaodien gd;
 	LogicXuLy::nap_du_lieu(gd);
 
-	td_log(loai_log::thong_bao, "Vòng lặp chính khởi động");
+	//td_log(loai_log::thong_bao, "Vòng lặp chính khởi động");
 
 	// Vòng lặp chính
 	while (!glfwWindowShouldClose(cuaso))

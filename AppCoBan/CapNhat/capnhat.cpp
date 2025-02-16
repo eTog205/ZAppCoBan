@@ -6,10 +6,22 @@
 
 #include <boost/dll.hpp>
 #include <boost/process.hpp>
-#include <fstream>
 
 using namespace std::chrono;
 namespace bfs = boost::filesystem;
+
+std::string get_appcoban_path()
+{
+
+	const bfs::path duongdan_capnhat = boost::dll::program_location();
+
+	const bfs::path thumuc_capnhat = duongdan_capnhat.parent_path();
+
+	const bfs::path thumuc_cha = thumuc_capnhat.parent_path();
+
+	const bfs::path duongdan_appcb = thumuc_cha / "AppCoBan.exe";
+	return duongdan_appcb.string();
+}
 
 std::string doctep_phienban(const std::string& tentep)
 {
@@ -123,33 +135,34 @@ void kiemtra_capnhat()
 
 void capnhat()
 {
-	const std::string duongdan_winrar = get_win_rar_path();
-	run_win_rar(duongdan_winrar);
+	const std::string duongdan_winrar = lau_duongdan_winrar();
+	const std::string app_path = get_appcoban_path();
+	const bfs::path dest_path(app_path);
+
+	const std::string duongdan_thumuc_giainen = dest_path.parent_path().string();
+
+	if (chay_winrar(duongdan_winrar, duongdan_thumuc_giainen))
+	{
+		td_log(loai_log::thong_bao, "Chạy tiến trình Winrar thành công");
+	} else
+	{
+		td_log(loai_log::loi, "Chạy tiến trình Winrar thất bại");
+	}
 }
 
 void chay_app_co_ban()
 {
 	try
 	{
-		// 1. Lấy đường dẫn của CapNhat.exe đang chạy
-		const bfs::path duongdan_capnhat = boost::dll::program_location();
+		const std::string app_path = get_appcoban_path();
 
-		// 2. Lấy thư mục chứa CapNhat.exe
-		const bfs::path thumuc_capnhat = duongdan_capnhat.parent_path();
-
-		// 3. Lấy thư mục chính (parent của thư mục CapNhat)
-		const bfs::path thumuc_cha = thumuc_capnhat.parent_path();
-
-		// 4. Xác định đường dẫn đến AppCoBan.exe nằm trong thư mục chính
-		const bfs::path duongdan_appcb = thumuc_cha / "AppCoBan.exe";
-
-		// 5. Chạy AppCoBan.exe với thư mục làm việc là thư mục chính (nếu cần)
+		const bfs::path app_dir = bfs::path(app_path).parent_path();
 		boost::process::child process(
-			duongdan_appcb.string(),
-			boost::process::start_dir = thumuc_cha.string() // đặt working directory là thư mục chính
+			app_path,
+			boost::process::start_dir = app_dir.string() // đặt working directory là thư mục chính
 		);
 
-		process.wait(); // Chờ tiến trình hoàn thành (tuỳ chọn)
+		process.wait();
 	} catch (const std::exception& e)
 	{
 		td_log(loai_log::loi, "chạy AppCoBan.exe:" + std::string(e.what()));

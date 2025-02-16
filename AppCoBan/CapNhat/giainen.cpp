@@ -1,24 +1,24 @@
 //giainen.cpp
+#include "../log_nhalam.h"
 #include "get.h"
 #include "giainen.h"
 
-#include "../log_nhalam.h"
-#include <iostream>
-#include <string>
-#include <vector>
+#include <boost/dll.hpp>
+#include <boost/process.hpp>
 #include <windows.h>
 
+namespace bp = boost::process;
+namespace bfs = boost::filesystem;
 
 void xoa_tapnen(const std::string& file_path)
 {
 	if (std::remove(file_path.c_str()) != 0)
 	{
-		// Xóa thất bại
 		td_log(loai_log::loi, "Xóa tệp nén thất bại: " + file_path);
 	}
 }
 
-std::string get_win_rar_path()
+std::string lau_duongdan_winrar()
 {
 	HKEY h_key;
 	char buffer[512]{};
@@ -47,56 +47,30 @@ std::string get_win_rar_path()
 	return { buffer };
 }
 
-bool run_win_rar(const std::string& winrar_path)
+bool chay_winrar(const std::string& duongdan_winrarexe, const std::string& duongdan_giainen)
 {
 	duan da;
-	// Xây dựng command line: "WinRAR.exe x -ibck "tệp.rar" "thư mục đích""
-	std::string cmd_line = "\"" + winrar_path + "\" x -ibck -y \"" + da.tentep + "\" \"" + da.duongdan_giainen + "\"";
+	const bfs::path thumuc_chuongtrinh = boost::dll::program_location().parent_path();
+	const bfs::path thumucnen_tuyetdoi = thumuc_chuongtrinh / da.tentep;
 
-	STARTUPINFOA si;
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(STARTUPINFOA);
-	PROCESS_INFORMATION pi;
-	ZeroMemory(&pi, sizeof(pi));
+	std::string cmd_line = "\"" + duongdan_winrarexe + "\" x -ibck -y \"" + thumucnen_tuyetdoi.string() + "\" \"" + duongdan_giainen + "\"";
 
-	// CreateProcess yêu cầu command line là một mảng char có thể sửa đổi, nên ta copy vào vector
-	std::vector cmd_buffer(cmd_line.begin(), cmd_line.end());
-	cmd_buffer.push_back('\0');  // Kết thúc chuỗi bằng ký tự null
-
-	const BOOL result = CreateProcessA(nullptr,
-									   cmd_buffer.data(),
-									   nullptr,
-									   nullptr,
-									   FALSE,
-									   0,
-									   nullptr,
-									   nullptr,
-									   &si,
-									   &pi
-	);
-
-	if (!result)
+	try
 	{
-		std::cerr << "CreateProcess failed with error: " << GetLastError() << std::endl;
+		bp::child c(cmd_line);
+		c.wait();
+		const int exit_code = c.exit_code();
+
+		if (exit_code == 0)
+		{
+			xoa_tapnen(da.tentep);
+		}
+
+		return (exit_code == 0);
+	} catch (const std::exception& e)
+	{
+		td_log(loai_log::loi, "Chạy tiến trình thất bại với lỗi: " + std::string(e.what()));
 		return false;
 	}
-
-	// Đợi cho tiến trình giải nén hoàn thành
-	WaitForSingleObject(pi.hProcess, INFINITE);
-
-	// Lấy mã kết thúc của tiến trình
-	DWORD exit_code = 0;
-	GetExitCodeProcess(pi.hProcess, &exit_code);
-
-	// Đóng handle sau khi hoàn thành
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-
-	if (exit_code == 0)
-	{
-		xoa_tapnen(da.tentep);
-	}
-
-	return (exit_code == 0);
 }
 

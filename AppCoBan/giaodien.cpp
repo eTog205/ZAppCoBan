@@ -85,12 +85,11 @@ void combo_box(const char* label, const char* options[], const int options_count
 
 void cap_nhat_bang_phan_mem(giaodien& gd, const logic_giaodien& lg_gd)
 {
-	// Số cột trong bảng: một cột checkbox + số cột dữ liệu (ví dụ: 3)
 	int column_count = lg_gd.soluong_cot + 1;
 	if (ImGui::BeginTable("BangPhanMem", column_count, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
 	{
 		// Thiết lập cột đầu tiên cho checkbox
-		ImGui::TableSetupColumn("Chọn", ImGuiTableColumnFlags_WidthFixed, 40.0f);
+		ImGui::TableSetupColumn("Chọn", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 40.0f);
 
 		// Thiết lập các cột dữ liệu theo tiêu đề có trong lg_gd.ten_cot
 		for (int i = 0; i < lg_gd.soluong_cot; ++i)
@@ -99,16 +98,13 @@ void cap_nhat_bang_phan_mem(giaodien& gd, const logic_giaodien& lg_gd)
 		}
 		ImGui::TableHeadersRow();
 
-		// Duyệt qua từng dòng dữ liệu trong gd.data
 		for (size_t row = 0; row < gd.data.size(); ++row)
 		{
 			ImGui::TableNextRow();
 
-			// Cột checkbox: dùng ID của dòng (giả sử gd.data[row][0] là ID duy nhất)
 			ImGui::TableSetColumnIndex(0);
 			std::string id = gd.data[row][0];
 
-			// Sử dụng trực tiếp biến lưu trạng thái trong selected_map (toán tử [] tạo giá trị mặc định false nếu chưa tồn tại)
 			ImGui::Checkbox(("##check" + std::to_string(row)).c_str(), &gd.selected_map[id]);
 
 			// Các cột dữ liệu: hiển thị nội dung của từng ô
@@ -301,6 +297,7 @@ void giaodien_caidat(giaodien& gd, const int chieurong_manhinh, const int chieuc
 
 	ImGui::Begin("caidat", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 	ImGui::Text("Tính năng đang được phát triển. Vui lòng đợi");
+
 	ImGui::End();
 }
 

@@ -2,9 +2,19 @@
 #include "../log_nhalam.h"
 #include "get.h"
 
+#include <boost/asio/ssl/context.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
 #include <boost/beast/ssl.hpp>
 #include <boost/beast/version.hpp>
 #include <fstream>
+
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace net = boost::asio;
+namespace ssl = net::ssl;
+using tcp = net::ip::tcp;
+
 
 std::string send_http_request(const std::string& url, bool is_asset, int redirect_count)
 {
@@ -87,7 +97,7 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 		}
 
 		beast::error_code ec;
-		// Đóng socket của tầng dưới mà không chờ thông báo close_notify của TLS
+
 		stream.next_layer().socket().shutdown(tcp::socket::shutdown_both, ec);
 		if (ec)
 		{
@@ -213,8 +223,10 @@ bool download_latest_release()
 		da.tentep = json::value_to<std::string>(asset["name"]);
 	} else
 	{
-		da.tentep = "ZTOG.zip";
+		da.tentep = "AppZit.rar";
 	}
 
 	return download_file(download_url, da.tentep);
 }
+
+
