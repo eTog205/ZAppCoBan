@@ -21,5 +21,3 @@ void capnhat();
 void chay_app_co_ban();
 
 
-
-

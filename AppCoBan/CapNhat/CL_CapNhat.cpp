@@ -6,7 +6,7 @@
 
 int main()
 {
-	int mode = 1;
+	constexpr int mode = 1;
 	g_logger = chuyendoi(mode);
 
 	kiemtra_capnhat();

@@ -28,19 +28,21 @@ std::string lau_duongdan_winrar()
 	LONG l_res = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\WinRAR", 0, KEY_READ, &h_key);
 	if (l_res != ERROR_SUCCESS)
 	{
-		// Nếu không thành công, thử mở key dưới WOW6432Node (cho hệ thống 64-bit)
-		l_res = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\WOW6432Node\\WinRAR", 0, KEY_READ, &h_key);
-		if (l_res != ERROR_SUCCESS)
-		{
-			return "";  // Không tìm thấy thông tin WinRAR
-		}
+		// WOW6432Node
+		//l_res = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\WOW6432Node\\WinRAR", 0, KEY_READ, &h_key);
+		//if (l_res != ERROR_SUCCESS)
+		//{
+		//	return "";  // Không tìm thấy thông tin WinRAR
+		//}
+
+		td_log(loai_log::loi, "Không mở được key SOFTWARE_WinRAR");
 	}
 
-	// Đọc giá trị "ExePath"
 	l_res = RegQueryValueExA(h_key, "exe64", nullptr, nullptr, reinterpret_cast<LPBYTE>(buffer), &dw_size);
 	RegCloseKey(h_key);
 	if (l_res != ERROR_SUCCESS)
 	{
+		td_log(loai_log::loi, "Không đọc được key exe64");
 		return "";
 	}
 
@@ -49,9 +51,8 @@ std::string lau_duongdan_winrar()
 
 bool chay_winrar(const std::string& duongdan_winrarexe, const std::string& duongdan_giainen)
 {
-	duan da;
 	const bfs::path thumuc_chuongtrinh = boost::dll::program_location().parent_path();
-	const bfs::path thumucnen_tuyetdoi = thumuc_chuongtrinh / da.tentep;
+	const bfs::path thumucnen_tuyetdoi = thumuc_chuongtrinh / g_tenTepDuAn;
 
 	std::string cmd_line = "\"" + duongdan_winrarexe + "\" x -ibck -y \"" + thumucnen_tuyetdoi.string() + "\" \"" + duongdan_giainen + "\"";
 
@@ -63,7 +64,7 @@ bool chay_winrar(const std::string& duongdan_winrarexe, const std::string& duong
 
 		if (exit_code == 0)
 		{
-			xoa_tapnen(da.tentep);
+			xoa_tapnen(g_tenTepDuAn);
 		}
 
 		return (exit_code == 0);
@@ -73,4 +74,5 @@ bool chay_winrar(const std::string& duongdan_winrarexe, const std::string& duong
 		return false;
 	}
 }
+
 

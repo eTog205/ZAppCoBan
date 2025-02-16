@@ -12,13 +12,9 @@ namespace bfs = boost::filesystem;
 
 std::string get_appcoban_path()
 {
-
 	const bfs::path duongdan_capnhat = boost::dll::program_location();
-
 	const bfs::path thumuc_capnhat = duongdan_capnhat.parent_path();
-
 	const bfs::path thumuc_cha = thumuc_capnhat.parent_path();
-
 	const bfs::path duongdan_appcb = thumuc_cha / "AppCoBan.exe";
 	return duongdan_appcb.string();
 }
@@ -168,3 +164,5 @@ void chay_app_co_ban()
 		td_log(loai_log::loi, "chạy AppCoBan.exe:" + std::string(e.what()));
 	}
 }
+
+

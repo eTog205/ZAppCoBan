@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="log">
-      <UniqueIdentifier>{8c4902ef-214c-4907-ab67-68f367503521}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GET github">
       <UniqueIdentifier>{ad7345a2-4689-4db8-b977-42a28c894e0d}</UniqueIdentifier>
     </Filter>

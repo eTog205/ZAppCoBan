@@ -3,6 +3,7 @@
 
 #include <boost/interprocess/creation_tags.hpp>
 #include <boost/interprocess/sync/named_mutex.hpp>
+#include <GLFW/glfw3.h>
 
 #include "log_nhalam.h"
 #include "xuly_thongso_cuaso.h"
@@ -24,6 +25,12 @@ int main()
 	GLFWwindow* cuaso = khoitao_cuaso();
 	if (!cuaso)
 		return 1;
+	if (!cuaso)
+		return 1;
+#ifdef _WIN32
+	set_taskbar_icon(cuaso);
+#endif
+
 
 	vonglap_chinh(cuaso);
 

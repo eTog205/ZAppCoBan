@@ -1,12 +1,14 @@
-﻿#pragma once
-#include <GLFW/glfw3.h>
+﻿//xuly_thongso_cuaso.h
+#pragma once
+
+void set_taskbar_icon(GLFWwindow* window);
+
+void dat_icon_cho_cuaso(GLFWwindow* window, const char* icon_path);
 
 void caidat_font();
 
-// Khởi tạo cửa sổ và ImGui
 GLFWwindow* khoitao_cuaso();
 
-// Vòng lặp chính
 void vonglap_chinh(GLFWwindow* cuaso);
 
 void dondep(GLFWwindow* cuaso);

@@ -9,8 +9,10 @@ struct duan
 {
 	std::string sohuu = "eTog205";
 	std::string kho = "SuaKeyTepApp";
-	std::string tentep;
+	//std::string tentep;
 };
+
+extern std::string g_tenTepDuAn;
 
 std::string send_http_request(const std::string& url, bool is_asset = false, int redirect_count = 0);
 

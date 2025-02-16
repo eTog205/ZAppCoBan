@@ -4,12 +4,65 @@
 #include "dv_csdl.h"
 #include "giaodien.h"
 #include "log_nhalam.h"
+#include "resource.h"
 #include "xuly_thongso_cuaso.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
+
+#ifdef _WIN32  
+#define GLFW_EXPOSE_NATIVE_WIN32  
+#include <GLFW/glfw3native.h>  
+#include <windows.h>
+
+void set_taskbar_icon(GLFWwindow* window)
+{
+	// Lấy handle của cửa sổ  
+	const HWND hwnd = glfwGetWin32Window(window);
+
+	// Tải icon từ resource (mã resource IDI_ICON1 phải khớp với resource.h)  
+	auto h_icon = static_cast<HICON>(LoadImage(GetModuleHandle(nullptr),
+									 MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR));
+	if (h_icon)
+	{
+		// Đặt icon lớn cho lớp cửa sổ  
+		SetClassLongPtr(hwnd, GCLP_HICON, reinterpret_cast<LONG_PTR>(h_icon));
+		// Đồng thời cập nhật icon nhỏ (thường hiển thị ở Taskbar)
+		SendMessage(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(h_icon));
+		//SendMessage(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(h_icon));
+	}
+}
+#endif
+
+
+void dat_icon_cho_cuaso(GLFWwindow* window, const char* icon_path)
+{
+	// Load ảnh RGBA
+	int width, height, channels;
+	unsigned char* data = stbi_load(icon_path, &width, &height, &channels, 4);
+	if (!data)
+	{
+		td_log(loai_log::canh_bao, "Không thể tải icon: " + std::string(icon_path));
+		return;
+	}
+
+	// Tạo struct GLFWimage
+	GLFWimage image;
+	image.width = width;
+	image.height = height;
+	image.pixels = data;
+
+	// Cài đặt icon cho cửa sổ
+	glfwSetWindowIcon(window, 1, &image);
+
+	// Giải phóng bộ nhớ sau khi set
+	stbi_image_free(data);
+}
 
 void caidat_font()
 {
@@ -36,12 +89,15 @@ GLFWwindow* khoitao_cuaso()
 	}
 
 	GLFWwindow* window = glfwCreateWindow(cauhinh_cuaso.chieurong, cauhinh_cuaso.chieucao, cauhinh_cuaso.tieude, nullptr, nullptr);
+
 	if (!window)
 	{
 		td_log(loai_log::loi, "khởi tạo cửa sổ glfw thất bại");
 		glfwTerminate();
 		return nullptr;
 	}
+
+	//dat_icon_cho_cuaso(window, "duck.png");
 
 	// Đặt giới hạn kích thước tối thiểu cho cửa sổ
 	glfwSetWindowSizeLimits(window, cauhinh_cuaso.chieurong, cauhinh_cuaso.chieucao, GLFW_DONT_CARE, GLFW_DONT_CARE);
@@ -89,8 +145,6 @@ void vonglap_chinh(GLFWwindow* cuaso)
 
 	giaodien gd;
 	LogicXuLy::nap_du_lieu(gd);
-
-	//td_log(loai_log::thong_bao, "Vòng lặp chính khởi động");
 
 	// Vòng lặp chính
 	while (!glfwWindowShouldClose(cuaso))

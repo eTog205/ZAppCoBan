@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="csdl">
       <UniqueIdentifier>{92d7c2d7-cfff-410d-9d33-a25b9ec5bc48}</UniqueIdentifier>
     </Filter>
@@ -63,6 +59,9 @@
     <ClInclude Include="suawindow.h">
       <Filter>tienich</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xuly_thongso_cuaso.cpp">
@@ -95,5 +94,11 @@
     <ClCompile Include="suawindow.cpp">
       <Filter>tienich</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AppCoBan.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="duck.ico" />
   </ItemGroup>
 </Project>
