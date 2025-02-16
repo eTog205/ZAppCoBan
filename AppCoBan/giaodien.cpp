@@ -1,8 +1,8 @@
 ﻿//giaodien.cpp
 #include "chucnang_coban.h"
-#include "cuaso.h"
-#include "dv_csdl.h"
+#include "csdl_thongbao.h"
 #include "giaodien.h"
+#include "suawindow.h"
 
 
 void handle_collapse(bool& is_collapsed, bool& collapse_requested, const std::chrono::steady_clock::time_point& collapse_start_time, float& current_size, const float expanded_size, const float collapsed_size, const float delay_seconds)
@@ -32,7 +32,7 @@ void handle_collapse(bool& is_collapsed, bool& collapse_requested, const std::ch
 }
 
 // Hàm hỗ trợ để tự động sửa đổi màu
-ImVec4 AdjustColorBrightness(const ImVec4& color, const float factor)
+ImVec4 adjust_color_brightness(const ImVec4& color, const float factor)
 {
 	return {
 		std::min(color.x * factor, 1.0f),
@@ -42,127 +42,7 @@ ImVec4 AdjustColorBrightness(const ImVec4& color, const float factor)
 	};
 }
 
-void giaodien_menuben1(giaodien& gd, bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kichthuoc_tinhnang, const int chieucao_manhinh)
-{
-	float chieurong_hientai = gd.chieurong_menuben;
-
-	// Cập nhật chiều cao menu
-	gd.chieucao_menuben = static_cast<float>(chieucao_manhinh) - gd.letren_menuben;
-
-	// Xử lý thu gọn menu
-	handle_collapse(
-		gd.menuben_thugon,
-		gd.yeucau_thugon,
-		gd.batdau_thugon,
-		chieurong_hientai,
-		gd.chieurong_menuben_morong,
-		gd.chieurong_menuben_thugon,
-		gd.thoigian_thugon
-	);
-
-
-	// Ghi lại chiều rộng thực tế
-	gd.chieurong_menuben = chieurong_hientai;
-
-	// Tạo giao diện menu bên
-	ImGui::SetNextWindowPos(ImVec2(gd.letrai_menuben, gd.letren_menuben));
-	ImGui::SetNextWindowSize(ImVec2(chieurong_hientai, gd.chieucao_menuben));
-
-	ImGui::Begin("Menu bên", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-
-	vitri_tinhnang = ImGui::GetCursorScreenPos();
-	kichthuoc_tinhnang = ImGui::GetWindowSize();
-
-	// Màu sắc nút cài đặt
-	ImVec4 button_caidat_color = ImVec4(0, 0, 0, 0);
-	ImVec4 button_caidat_hover_color = (button_caidat_color.w == 0.0f) ? ImVec4(0.3f, 0.3f, 0.3f, 0.2f) : AdjustColorBrightness(button_caidat_color, 0.8f);
-	ImVec4 button_caidat_active_color = (button_caidat_color.w == 0.0f) ? ImVec4(0.2f, 0.2f, 0.2f, 0.4f) : AdjustColorBrightness(button_caidat_color, 1.2f);
-
-	// Nút mở cài đặt
-	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 8.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, button_caidat_color);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, button_caidat_hover_color);
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, button_caidat_active_color);
-
-	const auto button_caidat_size = ImVec2(chieurong_hientai, 30.0f);
-
-	ImGui::SetCursorPos(ImVec2(0.0f, 0.0f));
-	const std::string text = "S cài đặt";
-	const int max_chars = std::max(1, static_cast<int>((chieurong_hientai - gd.chieurong_menuben_thugon) / (gd.chieurong_menuben - gd.chieurong_menuben_thugon) * static_cast<float>(text.size())));
-
-	const std::string visible_text = text.substr(0, max_chars);
-
-	ImVec2 text_pos = ImGui::GetCursorScreenPos();
-	text_pos.x += 10.0f;
-	text_pos.y += 10.0f;
-
-	if (ImGui::Button(" ", button_caidat_size))
-	{
-		hienthi_caidat = true;
-		ImGui::SetWindowFocus("cai dat");
-	}
-
-	ImGui::GetWindowDrawList()->AddText(text_pos, ImGui::GetColorU32(ImGuiCol_Text), visible_text.c_str());
-	ImGui::PopStyleColor(3);
-	ImGui::PopStyleVar();
-
-	// Nút thu gọn/mở rộng menu
-	const float button_y_pos = kichthuoc_tinhnang.y - 28.0f;
-	ImGui::SetCursorPos(ImVec2(0.0f, button_y_pos));
-
-	constexpr auto button_color = ImVec4(0.6f, 0.6f, 0.6f, 0.2f);
-	const ImVec4 button_hover_color = AdjustColorBrightness(button_color, 0.8f);
-	const ImVec4 button_active_color = AdjustColorBrightness(button_color, 1.2f);
-
-	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 8.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, button_color);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, button_hover_color);
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, button_active_color);
-
-	if (ImGui::Button(gd.menuben_thugon ? ">" : "<", ImVec2(chieurong_hientai, 30.0f)))
-	{
-		gd.yeucau_thugon = true;
-		gd.batdau_thugon = std::chrono::steady_clock::now();
-	}
-
-	ImGui::PopStyleColor(3);
-	ImGui::PopStyleVar();
-
-	ImGui::End();
-}
-
-void giaodien_caidat(GLFWwindow* cuaSo, bool& hienthi_caidat)
-{
-	static const char* danhSachCheDo[] = { "Cua So", "Toan Man Hinh", "Khong Vien" };
-
-	if (hienthi_caidat)
-	{
-		ImGui::Begin("cai dat", &hienthi_caidat);
-
-		// Combo box để chọn chế độ hiển thị
-		if (ImGui::BeginCombo("Che Do Hien Thi", danhSachCheDo[cauhinh_cuaso.chedo]))
-		{
-			for (int i = 0; i < IM_ARRAYSIZE(danhSachCheDo); i++)
-			{
-				bool daChon = (cauhinh_cuaso.chedo == i);
-				if (ImGui::Selectable(danhSachCheDo[i], daChon))
-				{
-					cauhinh_cuaso.chedo = static_cast<CauHinhCuaSo::chedo_hienthi>(i);
-					thaydoi_chedo_hienthi(cuaSo, cauhinh_cuaso);
-				}
-				if (daChon)
-				{
-					ImGui::SetItemDefaultFocus();
-				}
-			}
-			ImGui::EndCombo();
-		}
-
-		ImGui::End();
-	}
-}
-
-void comboBox_(const char* label, const char* options[], const int options_count, int& current_selection, const float gt_botron)
+void combo_box(const char* label, const char* options[], const int options_count, int& current_selection, const float gt_botron)
 {
 	// Nếu chưa chọn gì (currentSelection == 0), hiển thị chuỗi rỗng ""
 	const char* preview = (current_selection == 0) ? "" : options[current_selection];
@@ -203,7 +83,7 @@ void comboBox_(const char* label, const char* options[], const int options_count
 	}
 }
 
-void capNhatBangPhanMem(giaodien& gd, const logic_giaodien& lg_gd)
+void cap_nhat_bang_phan_mem(giaodien& gd, const logic_giaodien& lg_gd)
 {
 	// Số cột trong bảng: một cột checkbox + số cột dữ liệu (ví dụ: 3)
 	int column_count = lg_gd.soluong_cot + 1;
@@ -245,25 +125,6 @@ void capNhatBangPhanMem(giaodien& gd, const logic_giaodien& lg_gd)
 	}
 }
 
-// Hàm giao diện để tìm và cài đặt phần mềm từ winget
-void giaodien_bangdl(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
-{
-
-	gd.chieurong_bang = static_cast<float>(chieurong_manhinh) - gd.letrai_menuben * 3 - gd.chieurong_menuben; // Chiều rộng hiện tại của menu bên
-	gd.chieucao_bang = static_cast<float>(chieucao_manhinh) - gd.letren_bang;
-	gd.letrai_bang = gd.chieurong_menuben + gd.letrai_menuben * 2;
-
-	ImGui::SetNextWindowPos(ImVec2(gd.letrai_bang, gd.letren_bang));
-	ImGui::SetNextWindowSize(ImVec2(gd.chieurong_bang, gd.chieucao_bang));
-	ImGui::Begin("Bảng Không Có Tiêu Đề", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-
-	logic_giaodien lg_gd;
-	khoitao_logic_giaodien(lg_gd);
-
-	capNhatBangPhanMem(gd, lg_gd);
-	ImGui::End();
-}
-
 void giaodien_thanhcongcu(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
 {
 	const float chieurong_hientai = static_cast<float>(chieurong_manhinh) - gd.letrai_menuben * 2;
@@ -275,8 +136,7 @@ void giaodien_thanhcongcu(giaodien& gd, const int chieurong_manhinh, const int c
 
 	ImGui::Begin("thanh công cụ", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
-
-	if (ImGui::Button("nút tải về"))
+	if (ImGui::Button("nút cài đặt"))
 	{
 		for (const auto& item : gd.selected_map)
 		{
@@ -287,8 +147,160 @@ void giaodien_thanhcongcu(giaodien& gd, const int chieurong_manhinh, const int c
 		}
 	}
 
-	ImGui::SameLine();
+	ImGui::End();
+}
 
+void giaodien_menuben(giaodien& gd, const int chieucao_manhinh)
+{
+	float chieurong_hientai = gd.chieurong_menuben;
+
+	// Cập nhật chiều cao menu
+	gd.chieucao_menuben = static_cast<float>(chieucao_manhinh) - gd.letren_menuben;
+
+	// Xử lý thu gọn menu
+	handle_collapse(
+		gd.menuben_thugon,
+		gd.yeucau_thugon,
+		gd.batdau_thugon,
+		chieurong_hientai,
+		gd.chieurong_menuben_morong,
+		gd.chieurong_menuben_thugon,
+		gd.thoigian_thugon
+	);
+
+	// Ghi lại chiều rộng thực tế
+	gd.chieurong_menuben = chieurong_hientai;
+
+	// Tạo giao diện menu bên
+	ImGui::SetNextWindowPos(ImVec2(gd.letrai_menuben, gd.letren_menuben));
+	ImGui::SetNextWindowSize(ImVec2(chieurong_hientai, gd.chieucao_menuben));
+	ImGui::Begin("Menu bên", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+
+	auto button_color = ImVec4(0, 0, 0, 0);
+	ImVec4 button_hover_color = (button_color.w == 0.0f) ? ImVec4(0.3f, 0.3f, 0.3f, 0.2f) : adjust_color_brightness(button_color, 0.8f);
+	ImVec4 button_active_color = (button_color.w == 0.0f) ? ImVec4(0.2f, 0.2f, 0.2f, 0.4f) : adjust_color_brightness(button_color, 1.2f);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 8.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, button_color);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, button_hover_color);
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, button_active_color);
+
+	constexpr float button_height = 30.0f;
+	const ImVec2 button_size(chieurong_hientai, button_height);
+
+	const std::vector<MenuItem> menu_items = {
+		{L"Bảng dữ liệu", "bangdl"},
+		{L"Tiện ích", "tienich"},
+		{L"Cài đặt", "caidat"},
+	};
+
+	// Tính toán tỷ lệ để thu gọn chữ
+	float ratio = (chieurong_hientai - gd.chieurong_menuben_thugon) / (gd.chieurong_menuben_morong - gd.chieurong_menuben_thugon);
+	ratio = std::clamp(ratio, 0.0f, 1.0f);
+
+	for (const auto& item : menu_items)
+	{
+		ImVec2 button_pos = ImGui::GetCursorScreenPos();
+		button_pos.x = gd.letrai_menuben;
+		ImGui::SetCursorScreenPos(button_pos);
+
+		int max_chars = static_cast<int>(ratio * static_cast<float>(item.full_text.size()));
+		max_chars = std::clamp(max_chars, 1, static_cast<int>(item.full_text.size()));
+
+		std::wstring visible_text_w = item.full_text.substr(0, max_chars);
+		std::string visible_text = wstring_to_string(visible_text_w);
+
+		ImVec2 text_pos = ImGui::GetCursorScreenPos();
+		text_pos.x += 10.0f;
+		text_pos.y += 10.0f;
+
+		if (ImGui::Button(("###" + item.id).c_str(), button_size))
+		{
+			if (item.id == "bangdl") ImGui::SetWindowFocus("bangdl");
+			if (item.id == "tienich") ImGui::SetWindowFocus("tienich");
+			if (item.id == "caidat") ImGui::SetWindowFocus("caidat");
+		}
+
+		ImGui::GetWindowDrawList()->AddText(text_pos, ImGui::GetColorU32(ImGuiCol_Text), visible_text.c_str());
+	}
+
+	// Xóa style cho các nút khác trước khi vẽ nút thu gọn
+	ImGui::PopStyleColor(3);
+	ImGui::PopStyleVar();
+
+	// Nút thu gọn luôn nằm cuối và có style riêng
+	ImVec2 button_pos;
+	button_pos.x = gd.letrai_menuben;
+	button_pos.y = gd.chieucao_menuben + button_height * 3;
+	ImGui::SetCursorScreenPos(button_pos);
+
+	constexpr auto button_thugon_color = ImVec4(0.6f, 0.6f, 0.6f, 0.2f);
+	const ImVec4 button_thugon_hover_color = adjust_color_brightness(button_thugon_color, 0.8f);
+	const ImVec4 button_thugon_active_color = adjust_color_brightness(button_thugon_color, 1.2f);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 8.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, button_thugon_color);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, button_thugon_hover_color);
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, button_thugon_active_color);
+
+	if (ImGui::Button(gd.menuben_thugon ? ">" : "<", button_size))
+	{
+		gd.yeucau_thugon = true;
+		gd.batdau_thugon = std::chrono::steady_clock::now();
+	}
+
+	ImGui::PopStyleColor(3);
+	ImGui::PopStyleVar();
+
+	ImGui::End();
+}
+
+// Hàm giao diện để tìm và cài đặt phần mềm từ winget
+void giaodien_bangdl(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+{
+	gd.chieurong_bang = static_cast<float>(chieurong_manhinh) - gd.letrai_menuben * 3 - gd.chieurong_menuben;
+	gd.chieucao_bang = static_cast<float>(chieucao_manhinh) - gd.letren_bang;
+	gd.letrai_bang = gd.chieurong_menuben + gd.letrai_menuben * 2;
+
+	ImGui::SetNextWindowPos(ImVec2(gd.letrai_bang, gd.letren_bang));
+	ImGui::SetNextWindowSize(ImVec2(gd.chieurong_bang, gd.chieucao_bang));
+	ImGui::Begin("bangdl", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+
+	logic_giaodien lg_gd;
+	khoitao_logic_giaodien(lg_gd);
+
+	cap_nhat_bang_phan_mem(gd, lg_gd);
+	ImGui::End();
+}
+
+void giaodien_tienich(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+{
+	float chieurong_tienich = static_cast<float>(chieurong_manhinh) - gd.letrai_menuben * 3 - gd.chieurong_menuben;
+	float chieucao_tienich = static_cast<float>(chieucao_manhinh) - gd.letren_bang;
+	float letrai_tienich = gd.chieurong_menuben + gd.letrai_menuben * 2;
+
+	ImGui::SetNextWindowPos(ImVec2(letrai_tienich, gd.letren_bang));
+	ImGui::SetNextWindowSize(ImVec2(chieurong_tienich, chieucao_tienich));
+
+	ImGui::Begin("tienich", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+	if (ImGui::Button("Sửa Window"))
+	{
+		chaylenh_suawindow();
+	}
+	ImGui::End();
+}
+
+void giaodien_caidat(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+{
+	float chieurong_caidat = static_cast<float>(chieurong_manhinh) - gd.letrai_menuben * 3 - gd.chieurong_menuben;
+	float chieucao_caidat = static_cast<float>(chieucao_manhinh) - gd.letren_bang;
+	float letrai_caidat = gd.chieurong_menuben + gd.letrai_menuben * 2;
+
+	ImGui::SetNextWindowPos(ImVec2(letrai_caidat, gd.letren_bang));
+	ImGui::SetNextWindowSize(ImVec2(chieurong_caidat, chieucao_caidat));
+
+	ImGui::Begin("caidat", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+	ImGui::Text("Tính năng đang được phát triển. Vui lòng đợi");
 	ImGui::End();
 }
 

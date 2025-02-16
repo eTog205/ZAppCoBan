@@ -1,6 +1,6 @@
 //logic_giaodien.h
 #pragma once
-#include <xstring>
+#include <string>
 
 struct logic_giaodien
 {
@@ -66,3 +66,5 @@ void them_cot(logic_giaodien& lg_gd, const std::string& tenmoi, Args... args)
 
 void khoitao_logic_giaodien(logic_giaodien& lg_gd);
 
+std::string wstring_to_string(const std::wstring& wstr);
+std::wstring string_to_wstring(const std::string& str);

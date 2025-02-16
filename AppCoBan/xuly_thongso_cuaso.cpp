@@ -6,10 +6,10 @@
 #include "log_nhalam.h"
 #include "xuly_thongso_cuaso.h"
 
+
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-
 
 
 void caidat_font()
@@ -20,15 +20,15 @@ void caidat_font()
 	//const ImWchar* full_range = io.Fonts->GetGlyphRangesDefault(); // Toàn bộ ký tự cơ bản
 
 	// Nạp font hỗ trợ tiếng Việt
-	io.Fonts->AddFontFromFileTTF("arial.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesVietnamese()); // Toàn bộ ký tự cơ bản
-
+	io.Fonts->AddFontFromFileTTF("arial.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesVietnamese()); // Toàn bộ ký tự cơ bản
+	//arial
+	//NotoSans-VariableFont_wdth,wght
 	// Xây dựng lại texture cho font
 	//io.Fonts->Build();
 }
 
 GLFWwindow* khoitao_cuaso()
 {
-	//td_log(loai_log::thong_bao, "Phần mềm khởi động");
 	// Khởi tạo ImGui
 	if (!glfwInit())
 	{
@@ -68,6 +68,7 @@ GLFWwindow* khoitao_cuaso()
 	// Thiết lập góc bo tròn cho cửa sổ
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 10.0f;
+	style.FrameRounding = 4.0f;
 
 	caidat_font();
 
@@ -90,12 +91,6 @@ void vonglap_chinh(GLFWwindow* cuaso)
 	giaodien gd;
 	LogicXuLy::nap_du_lieu(gd);
 
-	// Biến điều khiển
-	bool hienthi_caidat = false;
-
-	ImVec2 vitri_tinhnang;
-	ImVec2 kichthuoc_tinhnang;
-
 	td_log(loai_log::thong_bao, "Vòng lặp chính khởi động");
 
 	// Vòng lặp chính
@@ -111,10 +106,11 @@ void vonglap_chinh(GLFWwindow* cuaso)
 		glfwGetFramebufferSize(cuaso, &chieurong_manhinh, &chieucao_manhinh);
 
 		// Hiển thị các giao diện
-		giaodien_menuben1(gd, hienthi_caidat, vitri_tinhnang, kichthuoc_tinhnang, chieucao_manhinh);
-		giaodien_caidat(cuaso, hienthi_caidat);
-		giaodien_bangdl(gd, chieurong_manhinh, chieucao_manhinh);
 		giaodien_thanhcongcu(gd, chieurong_manhinh, chieucao_manhinh);
+		giaodien_menuben(gd, chieucao_manhinh);
+		giaodien_tienich(gd, chieurong_manhinh, chieucao_manhinh);
+		giaodien_caidat(gd, chieurong_manhinh, chieucao_manhinh);
+		giaodien_bangdl(gd, chieurong_manhinh, chieucao_manhinh);
 
 		// Render
 		ImGui::Render();
@@ -129,8 +125,6 @@ void vonglap_chinh(GLFWwindow* cuaso)
 
 void dondep(GLFWwindow* cuaso)
 {
-	//td_log(loai_log::thong_bao, "Dọn dẹp khởi động");
-
 	close_database();
 
 	ImGui_ImplOpenGL3_Shutdown();

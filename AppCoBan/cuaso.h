@@ -22,6 +22,3 @@ struct CauHinhCuaSo
 };
 
 inline CauHinhCuaSo cauhinh_cuaso = CauHinhCuaSo::macdinh();
-
-// Hàm thay đổi chế độ hiển thị
-void thaydoi_chedo_hienthi(GLFWwindow* cuaso, const CauHinhCuaSo& cauhinh);

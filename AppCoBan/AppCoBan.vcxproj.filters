@@ -28,6 +28,9 @@
     <Filter Include="log">
       <UniqueIdentifier>{5dfffd1d-8f67-4ac3-bf2c-e425ff29cd25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tienich">
+      <UniqueIdentifier>{61fd954c-0a2e-4445-bddf-ea9778ac2d04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xuly_thongso_cuaso.h">
@@ -54,15 +57,18 @@
     <ClInclude Include="log_nhalam.h">
       <Filter>log</Filter>
     </ClInclude>
+    <ClInclude Include="csdl_thongbao.h">
+      <Filter>dichvu</Filter>
+    </ClInclude>
+    <ClInclude Include="suawindow.h">
+      <Filter>tienich</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xuly_thongso_cuaso.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CL_PhanMem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cuaso.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="csdl.cpp">
@@ -82,6 +88,12 @@
     </ClCompile>
     <ClCompile Include="log_nhalam.cpp">
       <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="csdl_thongbao.cpp">
+      <Filter>dichvu</Filter>
+    </ClCompile>
+    <ClCompile Include="suawindow.cpp">
+      <Filter>tienich</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

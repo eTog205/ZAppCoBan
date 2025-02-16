@@ -5,9 +5,9 @@
 std::string thucthi_lenh(const std::string& lenh)
 {
 	std::ostringstream output;
-
 	try
 	{
+		bool sha256_mismatch = false;
 		bp::ipstream pipe_stream; // Luồng để nhận đầu ra từ lệnh
 		bp::child process(lenh, bp::std_out > pipe_stream);
 		std::string line;
@@ -21,6 +21,11 @@ std::string thucthi_lenh(const std::string& lenh)
 			{
 				kotimthaygoi = true;
 			}
+
+			if (line.find("Installer hash does not match") != std::string::npos)
+			{
+				sha256_mismatch = true;
+			}
 		}
 
 		process.wait(); // Chờ lệnh kết thúc
@@ -28,6 +33,11 @@ std::string thucthi_lenh(const std::string& lenh)
 		if (kotimthaygoi)
 		{
 			return "Package not found";
+		}
+
+		if (sha256_mismatch)
+		{
+			td_log(loai_log::canh_bao, "phần mềm được chọn gặp lỗi (sha256_mismatch) cần đợi một thời gian mới có thể cài đặt)");
 		}
 
 		if (process.exit_code() != 0)
@@ -44,11 +54,14 @@ std::string thucthi_lenh(const std::string& lenh)
 
 void chaylenh(const std::string& id, const std::string& tuychon_them)
 {
-	// Các tùy chọn mặc định cho winget
-	const std::string tuychon_macdinh = " --silent --accept-package-agreements --accept-source-agreements --disable-interactivity ";
+	std::thread([id, tuychon_them]()
+	{
+		// Các tùy chọn mặc định cho winget
+		const std::string tuychon_macdinh = " --silent --accept-package-agreements --accept-source-agreements --disable-interactivity";
 
-	const std::string lenh = "winget install " + id + tuychon_macdinh + tuychon_them;
+		const std::string lenh = "winget install " + id + tuychon_macdinh + tuychon_them;
 
-	thucthi_lenh(lenh);
+		thucthi_lenh(lenh);
+	}).detach();
 }
 

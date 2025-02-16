@@ -56,18 +56,24 @@ struct giaodien
 
 };
 
+struct MenuItem
+{
+	std::wstring full_text;
+	std::string id;
+};
+
 void handle_collapse(bool& is_collapsed, bool& collapse_requested, const std::chrono::steady_clock::time_point& collapse_start_time, float& current_size, float expanded_size, float collapsed_size, float delay_seconds);
 
-ImVec4 AdjustColorBrightness(const ImVec4& color, float factor);
+ImVec4 adjust_color_brightness(const ImVec4& color, float factor);
 
-void giaodien_menuben1(giaodien& gd, bool& hienthi_caidat, ImVec2& vitri_tinhnang, ImVec2& kichthuoc_tinhnang, const int chieucao_manhinh);
+void combo_box(const char* label, const char* options[], int options_count, int& current_selection, float gt_botron);
 
-void giaodien_caidat(GLFWwindow* cuaSo, bool& hienthi_caidat);
-
-void comboBox_(const char* label, const char* options[], int options_count, int& current_selection, float gt_botron);
-
-void capNhatBangPhanMem(giaodien& gd, const logic_giaodien& lg_gd);
-
-void giaodien_bangdl(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+void cap_nhat_bang_phan_mem(giaodien& gd, const logic_giaodien& lg_gd);
 
 void giaodien_thanhcongcu(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+void giaodien_menuben(giaodien& gd, int chieucao_manhinh);
+void giaodien_caidat(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+void giaodien_bangdl(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+void giaodien_tienich(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+
+

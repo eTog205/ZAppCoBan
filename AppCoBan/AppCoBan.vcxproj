@@ -141,17 +141,20 @@
     <ClInclude Include="logic_giaodien.h" />
     <ClInclude Include="log_nhalam.h" />
     <ClInclude Include="dv_csdl.h" />
+    <ClInclude Include="csdl_thongbao.h" />
+    <ClInclude Include="suawindow.h" />
     <ClInclude Include="xuly_thongso_cuaso.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chucnang_coban.cpp" />
     <ClCompile Include="csdl.cpp" />
-    <ClCompile Include="cuaso.cpp" />
     <ClCompile Include="giaodien.cpp" />
     <ClCompile Include="logic_giaodien.cpp" />
     <ClCompile Include="log_nhalam.cpp" />
     <ClCompile Include="CL_PhanMem.cpp" />
     <ClCompile Include="dv_csdl.cpp" />
+    <ClCompile Include="csdl_thongbao.cpp" />
+    <ClCompile Include="suawindow.cpp" />
     <ClCompile Include="xuly_thongso_cuaso.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
