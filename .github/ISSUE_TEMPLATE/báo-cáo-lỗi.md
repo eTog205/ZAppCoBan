@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Báo cáo lỗi
+about: tạo báo cáo để giúp cải thiện dự án tốt hơn
 title: "[LỖI]"
 labels: bug
 assignees: eTog205
