@@ -4,7 +4,7 @@
 
 struct logic_giaodien
 {
-	int soluong_cot = 0; // Số lượng cột hiện tại
+	int soluong_cot = 0;
 	int succhua = 3; // Sức chứa thực tế của mảng
 	std::string* ten_cot;
 
@@ -47,7 +47,6 @@ struct logic_giaodien
 		return *this;
 	}
 
-	// Destructor để giải phóng bộ nhớ
 	~logic_giaodien()
 	{
 		delete[] ten_cot;
@@ -68,3 +67,16 @@ void khoitao_logic_giaodien(logic_giaodien& lg_gd);
 
 std::string wstring_to_string(const std::wstring& wstr);
 std::wstring string_to_wstring(const std::string& str);
+
+float tt_thugonkichthuoc(bool& da_thugon,
+						 bool& yeucau_thugon,
+						 const std::chrono::steady_clock::time_point& thoigian_batdau_thugon,
+						 float kichthuoc_morong,
+						 float kichthuoc_thugon,
+						 float thoigian_tre);
+
+std::string tt_vanbancothenhinthay(const std::wstring& toanbo_vanban,
+								   float chieurong_hientai,
+								   float chieurong_toithieu,
+								   float chieurong_toida);
+

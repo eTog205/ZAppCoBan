@@ -4,7 +4,6 @@
 #include "logic_giaodien.h"
 
 #include <chrono>
-#include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <unordered_map>
 
@@ -35,16 +34,14 @@ struct giaodien
 	int phienban_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phiên bản
 	int phanloai_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phân loại
 
-	//logic_giaodien lg_gd;
 	// Cấu hình hiển thị bảng dữ liệu
 	bool hienthi_cot[4] = { true,true,false,true }; // Trạng thái hiển thị của từng cột
-
 	bool hienthi_caidat_cot = false;  // Trạng thái hiển thị menu bật/tắt các cột trong bảng(mặc định: false ẩn lúc ban đầu, true: hiện lên lúc ban đầu)
 
 	// Kích thước và vị trí của bảng dữ liệu
-	float chieurong_bang = 0.0f;  // Chiều rộng của bảng dữ liệu
-	float letrai_bang = 14.0f;    // Khoảng cách từ lề trái của màn hình đến bảng dữ liệu
-	float letren_bang = 125.0f;   // Khoảng cách từ lề trên của màn hình đến bảng dữ liệu
+	float chieurong_bang = 0.0f;
+	float letrai_bang = 14.0f;
+	float letren_bang = 125.0f;
 	float chieucao_bang = 0.0f;   // Chiều cao của bảng dữ liệu (tính theo chiều cao màn hình)
 
 	int row_count = 0;
@@ -58,11 +55,17 @@ struct giaodien
 
 struct MenuItem
 {
-	std::wstring full_text;
+	std::wstring toanbo_vanban;
 	std::string id;
 };
 
-void handle_collapse(bool& is_collapsed, bool& collapse_requested, const std::chrono::steady_clock::time_point& collapse_start_time, float& current_size, float expanded_size, float collapsed_size, float delay_seconds);
+struct thongtin_cuaso_imgui
+{
+	ImVec2 vitri;
+	ImVec2 kichthuoc;
+};
+
+thongtin_cuaso_imgui tinh_thongtin_cuaso(const giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
 
 ImVec4 adjust_color_brightness(const ImVec4& color, float factor);
 

@@ -16,7 +16,7 @@ namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
 
-std::string g_tenTepDuAn;
+std::string tentep;
 
 std::string send_http_request(const std::string& url, bool is_asset, int redirect_count)
 {
@@ -222,13 +222,13 @@ bool download_latest_release()
 	// Lấy tên tệp gốc từ asset (trường "name")
 	if (asset.contains("name"))
 	{
-		g_tenTepDuAn = json::value_to<std::string>(asset["name"]);
+		tentep = json::value_to<std::string>(asset["name"]);
 	} else
 	{
-		g_tenTepDuAn = "AppZit.rar";
+		tentep = "AppZit.rar";
 	}
 
-	return download_file(download_url, g_tenTepDuAn);
+	return download_file(download_url, tentep);
 }
 
 

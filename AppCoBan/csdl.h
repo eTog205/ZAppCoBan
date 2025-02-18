@@ -53,4 +53,3 @@ bool database_exists(const char* db_name);
 void khoidong_sql();
 
 
-

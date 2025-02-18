@@ -16,12 +16,8 @@ void them_cot(logic_giaodien& lg_gd, const std::string& tenmoi)
 		const auto temp = new std::string[succhua_moi];
 
 		// Sao chép dữ liệu cũ sang mảng mới
-		for (int i = 0; i < lg_gd.soluong_cot; i++)
-		{
-			temp[i] = lg_gd.ten_cot[i];
-		}
+		std::copy_n(lg_gd.ten_cot, lg_gd.soluong_cot, temp);
 
-		// Giải phóng mảng cũ
 		delete[] lg_gd.ten_cot;
 
 		// Cập nhật con trỏ và sức chứa mới
@@ -59,3 +55,46 @@ std::wstring string_to_wstring(const std::string& str)
 
 	return wstr;
 }
+
+float tt_thugonkichthuoc(bool& da_thugon,
+						 bool& yeucau_thugon,
+						 const std::chrono::steady_clock::time_point& thoigian_batdau_thugon,
+						 const float kichthuoc_morong,
+						 const float kichthuoc_thugon,
+						 const float thoigian_tre)
+{
+	// Giá trị khởi tạo theo trạng thái hiện tại
+	float new_size = da_thugon ? kichthuoc_thugon : kichthuoc_morong;
+	if (yeucau_thugon)
+	{
+		const auto now = std::chrono::steady_clock::now();
+		const float elapsed = std::chrono::duration<float>(now - thoigian_batdau_thugon).count();
+
+		float t = std::clamp(elapsed / thoigian_tre, 0.0f, 1.0f);
+
+		const float start_size = da_thugon ? kichthuoc_thugon : kichthuoc_morong;
+		const float target_size = da_thugon ? kichthuoc_morong : kichthuoc_thugon;
+		new_size = start_size + t * (target_size - start_size);
+
+		if (t >= 1.0f)
+		{
+			da_thugon = !da_thugon;
+			yeucau_thugon = false;
+		}
+	}
+
+	return new_size;
+}
+
+
+std::string tt_vanbancothenhinthay(const std::wstring& toanbo_vanban,
+								   const float chieurong_hientai,
+								   const float chieurong_toithieu,
+								   const float chieurong_toida)
+{
+	const float ratio = std::clamp((chieurong_hientai - chieurong_toithieu) / (chieurong_toida - chieurong_toithieu), 0.0f, 1.0f);
+	const int max_chars = std::clamp(static_cast<int>(ratio * static_cast<float>(toanbo_vanban.size())), 1, static_cast<int>(toanbo_vanban.size()));
+	return wstring_to_string(toanbo_vanban.substr(0, max_chars));
+}
+
+

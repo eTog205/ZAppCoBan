@@ -52,7 +52,7 @@ std::string lau_duongdan_winrar()
 bool chay_winrar(const std::string& duongdan_winrarexe, const std::string& duongdan_giainen)
 {
 	const bfs::path thumuc_chuongtrinh = boost::dll::program_location().parent_path();
-	const bfs::path thumucnen_tuyetdoi = thumuc_chuongtrinh / g_tenTepDuAn;
+	const bfs::path thumucnen_tuyetdoi = thumuc_chuongtrinh / tentep;
 
 	std::string cmd_line = "\"" + duongdan_winrarexe + "\" x -ibck -y \"" + thumucnen_tuyetdoi.string() + "\" \"" + duongdan_giainen + "\"";
 
@@ -64,7 +64,7 @@ bool chay_winrar(const std::string& duongdan_winrarexe, const std::string& duong
 
 		if (exit_code == 0)
 		{
-			xoa_tapnen(g_tenTepDuAn);
+			xoa_tapnen(tentep);
 		}
 
 		return (exit_code == 0);

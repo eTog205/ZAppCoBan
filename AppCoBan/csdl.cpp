@@ -19,7 +19,6 @@ std::string decode_base64(const std::string& encoded)
 	return decoded;
 }
 
-//cần xem xét bỏ để dùng hàm bên tệp get
 // 🔹 Hàm gửi request HTTP GET
 std::string send_http_request(const std::string& host, const std::string& target)
 {
@@ -76,7 +75,6 @@ std::string send_http_request(const std::string& host, const std::string& target
 	}
 }
 
-//cần xem xét bỏ để dùng hàm bên tệp get
 // 🔹 Hàm lấy nội dung `sql.db` từ GitHub API
 std::string fetch_github_data(const std::string& owner, const std::string& repo, const std::string& file_path)
 {
@@ -93,7 +91,6 @@ std::string fetch_github_data(const std::string& owner, const std::string& repo,
 	return response;
 }
 
-//cần xem xét bỏ để dùng hàm bên tệp get
 std::string fetch_github_file_metadata(const std::string& owner, const std::string& repo, const std::string& file_path)
 {
 	const std::string host = "api.github.com";
