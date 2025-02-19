@@ -1,4 +1,4 @@
-//chucnang_coban.h
+//chucnang_cotloi.h
 #pragma once
 #include <boost/process.hpp>
 
@@ -8,3 +8,4 @@ namespace bp = boost::process;
 std::string thucthi_lenh(const std::string& lenh);
 
 void chaylenh(const std::string& id, const std::string& tuychon_them = "");
+void chaylenh_suawindow();

@@ -103,7 +103,7 @@ void quayvong_log(const fs::path& thumuc_log, const fs::path& log_hientai)
 		} catch (const fs::filesystem_error& e)
 		{
 			// Xử lý lỗi nếu cần (ví dụ, ghi log ra một nơi khác hoặc thông báo cho người dùng)
-			MessageBoxA(nullptr, e.what(), "Không thể quay vòng", MB_OK | MB_ICONERROR);
+			MessageBoxA(nullptr, e.what(), "Log lỗi: không thể quay vòng", MB_OK | MB_ICONERROR);
 		}
 	}
 }
@@ -124,7 +124,7 @@ std::shared_ptr<spdlog::logger> chuyendoi(const int mode)
 		return khoitao_logger_file();
 	} catch (const spdlog::spdlog_ex& ex)
 	{
-		MessageBoxA(nullptr, ex.what(), "Không thể khởi tạo spdlog", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, ex.what(), "Log lỗi: không thể khởi tạo spdlog", MB_OK | MB_ICONERROR);
 		return nullptr;
 	}
 }

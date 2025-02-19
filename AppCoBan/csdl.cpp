@@ -4,9 +4,10 @@
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/core/detail/base64.hpp>
+#include <boost/json.hpp>
 #include <fstream>
-#include <nlohmann/json.hpp>
 
+namespace bj = boost::json;
 sqlite3* db = nullptr;
 
 // 🔹 Hàm giải mã Base64 nếu cần
@@ -26,7 +27,7 @@ std::string send_http_request(const std::string& host, const std::string& target
 	{
 		net::io_context ioc;
 		boost::asio::ssl::context ctx(boost::asio::ssl::context::tlsv12_client);
-		ctx.set_default_verify_paths();  // Cấu hình SSL
+		ctx.set_default_verify_paths();
 
 		tcp::resolver resolver(ioc);
 		beast::ssl_stream<tcp::socket> stream(ioc, ctx);
@@ -43,7 +44,7 @@ std::string send_http_request(const std::string& host, const std::string& target
 
 		http::write(stream, req);
 
-		// Nhận phản hồi
+		// Nhận phản hồi, cần tìm cách tăng giới hạn body
 		beast::flat_buffer buffer;
 		http::response<http::dynamic_body> res;
 		read(stream, buffer, res);
@@ -51,20 +52,15 @@ std::string send_http_request(const std::string& host, const std::string& target
 		// Đóng kết nối
 		beast::error_code ec;
 		stream.shutdown(ec);
-		if (ec == net::error::eof)
-		{
-			ec = {};
-		}
-		if (ec)
-		{
-			throw beast::system_error(ec);
-		}
 
-		// Kiểm tra mã trạng thái HTTP
+		if (ec == net::error::eof)
+			ec = {};
+
+		if (ec)
+			throw beast::system_error(ec);
+
 		if (res.result() != http::status::ok)
-		{
 			throw std::runtime_error("HTTP Error: " + std::to_string(static_cast<int>(res.result())));
-		}
 
 		return buffers_to_string(res.body().data());
 
@@ -113,53 +109,69 @@ void save_to_file(const std::string& filename, const std::string& data)
 	std::ofstream outFile(filename, std::ios::binary);
 	if (outFile)
 	{
-		outFile.write(data.data(), data.size());
+		outFile.write(data.data(), static_cast<std::streamsize>(data.size()));
 		outFile.close();
 	} else
-	{
 		td_log(loai_log::loi, "ghi file:" + std::string(filename));
-	}
 }
 
 void luu_tepsha(const std::string& sha_file, const std::string& owner, const std::string& repo, const std::string& file_path)
 {
 	std::ofstream sha_file_out(sha_file);
-	if (sha_file_out)
+
+	if (!sha_file_out)
 	{
-		std::string metadata_response = fetch_github_file_metadata(owner, repo, file_path);
-
-		if (!metadata_response.empty())
-		{
-			nlohmann::json metadata_json = nlohmann::json::parse(metadata_response);
-			if (metadata_json.contains("sha"))
-			{
-				const std::string new_sha = metadata_json["sha"];
-				sha_file_out << new_sha;
-			} else
-			{
-				td_log(loai_log::loi, "Metadata không chứa `sha`");
-			}
-		} else
-		{
-			td_log(loai_log::loi, "Không nhận được metadata từ GitHub.");
-
-		}
-		sha_file_out.close();
+		td_log(loai_log::loi, "Không thể mở file SHA: " + sha_file);
+		return;
 	}
+
+	std::string metadata_response = fetch_github_file_metadata(owner, repo, file_path);
+
+
+	if (metadata_response.empty())
+	{
+		td_log(loai_log::loi, "Không nhận được metadata từ GitHub");
+		return;
+	}
+
+	try
+	{
+		bj::value metadata_json = bj::parse(metadata_response);
+
+		if (!metadata_json.is_array())
+		{
+			td_log(loai_log::loi, "Metadata không phải mảng JSON");
+			return;
+		}
+		auto arr = metadata_json.as_array();
+		if (arr.empty() || !arr[0].is_object())
+		{
+			td_log(loai_log::loi, "Mảng metadata rỗng hoặc phần tử đầu tiên không phải object");
+			return;
+		}
+
+		auto& obj0 = arr[0].as_object();
+		auto it = obj0.find("sha");
+		if (it == obj0.end())
+		{
+			td_log(loai_log::loi, "Metadata không chứa `sha`");
+			return;
+		}
+
+		auto new_sha = bj::value_to<std::string>(it->value());
+		sha_file_out << new_sha; // Ghi ra file
+	} catch (const std::exception& e)
+	{
+		td_log(loai_log::loi, "Lỗi parse JSON: " + std::string(e.what()));
+	}
+
+	sha_file_out.close();
 }
 
-void capnhat_data()
+void capnhat_data(const csdl& c)
 {
-	// Cấu hình repository
-	const std::string owner = "eTog205";
-	const std::string repo = "ZAppCoBan";
-
-	// file cần lấy
-	const std::string file_path = "sql.db";
-	const std::string sha_file = "sql.sha";
-
-	// 🔹 Kiểm tra xem tệp SHA có tồn tại không
-	std::ifstream sha_file_in(sha_file);
+	// Đọc SHA cũ
+	std::ifstream sha_file_in(c.sha_file);
 	std::string old_sha;
 	if (sha_file_in)
 	{
@@ -167,86 +179,64 @@ void capnhat_data()
 		sha_file_in.close();
 	}
 
-	// 🔹 Nếu SHA cũ tồn tại, lấy SHA mới để so sánh
+	// Nếu có SHA cũ, so sánh với SHA mới
 	if (!old_sha.empty())
 	{
-		std::string metadata_response = fetch_github_file_metadata(owner, repo, file_path);
+		std::string metadata_response = fetch_github_file_metadata(c.owner, c.repo, c.file_path);
 		if (metadata_response.empty())
 		{
-			td_log(loai_log::loi, "Không thể lấy metadata từ GitHub ");
+			td_log(loai_log::loi, "Không thể lấy metadata từ GitHub");
 			return;
 		}
 
-		// 🔹 Parse JSON để lấy `sha`
-		nlohmann::json metadata_json;
+		bj::value metadata_json;
 		try
 		{
-			metadata_json = nlohmann::json::parse(metadata_response);
+			metadata_json = bj::parse(metadata_response);
 		} catch (const std::exception& e)
 		{
-			td_log(loai_log::loi, "khi parse metadata: " + std::string(e.what()));
+			td_log(loai_log::loi, "Lỗi parse metadata: " + std::string(e.what()));
 			return;
 		}
 
-		if (!metadata_json.is_array() || metadata_json.empty() || !metadata_json[0].contains("sha"))
+		if (!metadata_json.is_array())
 		{
-
-			td_log(loai_log::loi, "Metadata không chứa thông tin `sha` ");
+			td_log(loai_log::loi, "Metadata không phải mảng JSON");
+			return;
+		}
+		auto arr = metadata_json.as_array();
+		if (arr.empty() || !arr[0].is_object())
+		{
+			td_log(loai_log::loi, "Mảng metadata rỗng hoặc phần tử đầu tiên không phải object");
+			return;
+		}
+		auto& obj0 = arr[0].as_object();
+		auto it = obj0.find("sha");
+		if (it == obj0.end())
+		{
+			td_log(loai_log::loi, "Metadata không chứa `sha`");
 			return;
 		}
 
-		std::string new_sha = metadata_json[0]["sha"];
-
-		// 🔹 Nếu SHA không thay đổi, không cần tải lại
+		auto new_sha = bj::value_to<std::string>(it->value());
+		// Nếu SHA không thay đổi, dừng
 		if (old_sha == new_sha)
-		{
 			return;
-		}
 	}
 
-	// 🔹 Nếu tệp SHA không tồn tại hoặc SHA đã thay đổi, tải file mới
+	// Nếu SHA cũ không tồn tại hoặc đã thay đổi => tải file mới
 	td_log(loai_log::thong_bao, "🔄 Dữ liệu mới có phiên bản cập nhật, tiến hành tải...");
 
-	std::string new_data = fetch_github_data(owner, repo, file_path);
+	std::string new_data = fetch_github_data(c.owner, c.repo, c.file_path);
 	if (!new_data.empty())
 	{
-		save_to_file("sql.db", new_data);
+		save_to_file(c.file_path, new_data);
+		luu_tepsha(c.sha_file, c.owner, c.repo, c.file_path);
 
-		// 🔹 Lưu SHA mới vào file để sử dụng lần sau
-		std::ofstream sha_file_out(sha_file);
-		if (sha_file_out)
-		{
-			std::string metadata_response = fetch_github_file_metadata(owner, repo, file_path);
-
-			if (!metadata_response.empty())
-			{
-				try
-				{
-					nlohmann::json metadata_json = nlohmann::json::parse(metadata_response);
-
-					if (metadata_json.is_array() && !metadata_json.empty() && metadata_json[0].contains("sha"))
-					{
-						std::string new_sha = metadata_json[0]["sha"];
-						sha_file_out << new_sha;
-					} else
-					{
-						td_log(loai_log::loi, "JSON không chứa thông tin `sha`, kiểm tra phản hồi!");
-					}
-				} catch (const std::exception& e)
-				{
-					td_log(loai_log::loi, "khi parse JSON metadata: " + std::string(e.what()));
-				}
-			} else
-			{
-				td_log(loai_log::loi, "Không nhận được metadata từ GitHub");
-			}
-			sha_file_out.close();
-		}
 		td_log(loai_log::thong_bao, "Đã cập nhật dữ liệu và lưu SHA mới.");
 	} else
 	{
-		td_log(loai_log::loi, "tải dữ liệu `sql.db`");
-
+		td_log(loai_log::loi, "Không tải được dữ liệu `" + c.file_path + "`");
 	}
 }
 
@@ -308,7 +298,8 @@ int execute_sql(const char* sql)
 // Tạo bảng nếu chưa có
 int create_table()
 {
-	const auto sql = "CREATE TABLE IF NOT EXISTS Items ("
+	const auto sql =
+		"CREATE TABLE IF NOT EXISTS Items ("
 		"ID TEXT PRIMARY KEY, "
 		"Name TEXT NOT NULL, "
 		"Category TEXT);";
@@ -325,6 +316,5 @@ void khoidong_sql()
 {
 	open_database_read_only("sql.db");
 }
-
 
 

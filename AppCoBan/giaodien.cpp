@@ -1,5 +1,5 @@
 ﻿//giaodien.cpp
-#include "chucnang_coban.h"
+#include "chucnang_cotloi.h"
 #include "giaodien.h"
 
 

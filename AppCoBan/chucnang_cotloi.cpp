@@ -1,5 +1,5 @@
 //chucnang_coban.cpp
-#include "chucnang_coban.h"
+#include "chucnang_cotloi.h"
 #include "log_nhalam.h"
 
 std::string thucthi_lenh(const std::string& lenh)
@@ -57,6 +57,32 @@ void chaylenh(const std::string& id, const std::string& tuychon_them)
 
 		thucthi_lenh(lenh);
 	}).detach();
+}
+
+void chaylenh_suawindow()
+{
+	try
+	{
+		std::string powershell_path = R"(C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)";
+		//std::string powershell_path = R"(C:\Program Files\PowerShell\7\pwsh.exe)";
+
+		std::string command =
+			"Start-Process -FilePath 'powershell.exe' "
+			"-ArgumentList '-NoExit', '-ExecutionPolicy Bypass', "
+			"'sfc /scannow; Dism /Online /Cleanup-Image /RestoreHealth; sfc /scannow' "
+			"-Verb RunAs";
+
+		/*std::string command =
+			"Start-Process -FilePath 'pwsh.exe' "
+			"-ArgumentList '-NoExit','-ExecutionPolicy','Bypass','-Command','sfc /scannow; Dism /Online /Cleanup-Image /RestoreHealth; sfc /scannow' "
+			"-Verb RunAs";*/
+
+		bp::child process(powershell_path, bp::args = { "-NoExit","-NoProfile", "-ExecutionPolicy", "Bypass","-WindowStyle", "Hidden", "-Command", command });
+		process.wait();
+	} catch (const std::exception& ex)
+	{
+		td_log(loai_log::loi, "Lỗi: " + std::string(ex.what()));
+	}
 }
 
 

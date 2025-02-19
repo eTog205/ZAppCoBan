@@ -69,8 +69,14 @@ void caidat_font()
 	//io.Fonts->Build();
 }
 
+void glfw_error_callback(const int error, const char* description)
+{
+	td_log(loai_log::loi, "GLFW lỗi %d: %s\n" + std::to_string(error) + std::string(description));
+}
+
 GLFWwindow* khoitao_cuaso()
 {
+	glfwSetErrorCallback(glfw_error_callback);
 	if (!glfwInit())
 	{
 		td_log(loai_log::loi, "khởi tạo glfw thất bại");
@@ -129,7 +135,8 @@ GLFWwindow* khoitao_cuaso()
 
 void vonglap_chinh(GLFWwindow* cuaso)
 {
-	capnhat_data();
+	csdl c;
+	capnhat_data(c);
 	khoidong_sql();
 
 	giaodien gd;
@@ -138,6 +145,13 @@ void vonglap_chinh(GLFWwindow* cuaso)
 	while (!glfwWindowShouldClose(cuaso))
 	{
 		glfwPollEvents();
+
+		if (glfwGetWindowAttrib(cuaso, GLFW_ICONIFIED))
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			continue;
+		}
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -154,7 +168,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
 		ImGui::Render();
 		glViewport(0, 0, chieurong_manhinh, chieucao_manhinh);
 		glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glFinish();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(cuaso);

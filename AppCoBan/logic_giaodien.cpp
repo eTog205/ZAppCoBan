@@ -1,8 +1,7 @@
 //logic_giaodien.cpp
-#include "chucnang_coban.h"
+#include "chucnang_cotloi.h"
 #include "log_nhalam.h"
 #include "logic_giaodien.h"
-#include "suawindow.h"
 
 void them_cot(logic_giaodien& lg_gd, const std::string& tenmoi)
 {

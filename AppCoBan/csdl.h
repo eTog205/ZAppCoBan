@@ -34,8 +34,8 @@ void save_to_file(const std::string& filename, const std::string& data);
 // 🔹 Hàm lưu sha ra file
 void luu_tepsha(const std::string& sha_file, const std::string& owner, const std::string& repo, const std::string& file_path);
 
-void capnhat_data();
-
+//void capnhat_data();
+void capnhat_data(const csdl& c);
 
 extern sqlite3* db;
 
