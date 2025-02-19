@@ -8,7 +8,7 @@ namespace json = boost::json;
 struct duan
 {
 	std::string sohuu = "eTog205";
-	std::string kho = "SuaKeyTepApp";
+	std::string kho = "ZAppCoBan";
 };
 
 extern std::string tentep;

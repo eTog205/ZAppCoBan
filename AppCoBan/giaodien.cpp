@@ -1,8 +1,6 @@
 ﻿//giaodien.cpp
 #include "chucnang_coban.h"
-#include "csdl_thongbao.h"
 #include "giaodien.h"
-#include "suawindow.h"
 
 
 // Hàm tính toán vị trí, kích thước, tên cửa sổ và cờ cho một cửa sổ con
@@ -66,7 +64,7 @@ void combo_box(const char* label, const char* options[], const int options_count
 		current_selection = 0; // Reset về trạng thái không hiển thị gì
 }
 
-void cap_nhat_bang_phan_mem(giaodien& gd, const logic_giaodien& lg_gd)
+void capnhat_bang_phanmem(giaodien& gd, const logic_giaodien& lg_gd)
 {
 	int column_count = lg_gd.soluong_cot + 1;
 	if (ImGui::BeginTable("BangPhanMem", column_count, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
@@ -109,15 +107,12 @@ void giaodien_thanhcongcu(giaodien& gd, const int chieurong_manhinh, const int c
 	ImGui::SetNextWindowSize(ImVec2(chieurong_hientai, chieucao_hientai));
 
 	ImGui::Begin("thanh công cụ", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-
 	if (ImGui::Button("nút cài đặt"))
 	{
-		for (const auto& item : gd.selected_map)
+		for (auto& item : gd.selected_map)
 		{
 			if (item.second)
-			{
-				chaylenh(item.first);
-			}
+				logic_giaodien::chaylenh_winget(item.first);
 		}
 	}
 
@@ -225,10 +220,9 @@ void giaodien_bangdl(giaodien& gd, const int chieurong_manhinh, const int chieuc
 	ImGui::SetNextWindowSize(ImVec2(tt.kichthuoc));
 	ImGui::Begin("bangdl", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
-	// Phần nội dung
 	logic_giaodien lg_gd;
 	khoitao_logic_giaodien(lg_gd);
-	cap_nhat_bang_phan_mem(gd, lg_gd);
+	capnhat_bang_phanmem(gd, lg_gd);
 
 	ImGui::End();
 }
@@ -242,9 +236,7 @@ void giaodien_tienich(giaodien& gd, const int chieurong_manhinh, const int chieu
 	ImGui::Begin("tienich", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
 	if (ImGui::Button("Sửa Window"))
-	{
-		chaylenh_suawindow();
-	}
+		logic_giaodien::chaylenh_tienich();
 
 	ImGui::End();
 }

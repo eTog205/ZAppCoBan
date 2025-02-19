@@ -6,7 +6,7 @@
 class LogicXuLy
 {
 public:
-    static void nap_du_lieu(giaodien& gd);
+	static void nap_du_lieu(giaodien& gd);
 };
 
 

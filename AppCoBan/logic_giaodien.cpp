@@ -2,6 +2,7 @@
 #include "chucnang_coban.h"
 #include "log_nhalam.h"
 #include "logic_giaodien.h"
+#include "suawindow.h"
 
 void them_cot(logic_giaodien& lg_gd, const std::string& tenmoi)
 {
@@ -95,6 +96,16 @@ std::string tt_vanbancothenhinthay(const std::wstring& toanbo_vanban,
 	const float ratio = std::clamp((chieurong_hientai - chieurong_toithieu) / (chieurong_toida - chieurong_toithieu), 0.0f, 1.0f);
 	const int max_chars = std::clamp(static_cast<int>(ratio * static_cast<float>(toanbo_vanban.size())), 1, static_cast<int>(toanbo_vanban.size()));
 	return wstring_to_string(toanbo_vanban.substr(0, max_chars));
+}
+
+void logic_giaodien::chaylenh_winget(const std::string& command_id)
+{
+	chaylenh(command_id);
+}
+
+void logic_giaodien::chaylenh_tienich()
+{
+	chaylenh_suawindow();
 }
 
 

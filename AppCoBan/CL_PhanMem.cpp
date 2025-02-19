@@ -10,7 +10,7 @@
 
 int main()
 {
-	static boost::interprocess::named_mutex mutex(boost::interprocess::open_or_create, "ZitApp1");
+	static boost::interprocess::named_mutex mutex(boost::interprocess::open_or_create, "ZitApp");
 
 	// Nếu mutex đã bị khóa, tức là phần mềm đang chạy, thoát ngay
 	if (!mutex.try_lock())
@@ -42,5 +42,5 @@ int main()
 	spdlog::shutdown();
 
 	// Giải phóng mutex khi tắt chương trình
-	boost::interprocess::named_mutex::remove("ZitApp1");
+	boost::interprocess::named_mutex::remove("ZitApp");
 }

@@ -1,4 +1,4 @@
-// suawindow.cpp
+//suawindow.cpp
 #include "log_nhalam.h"
 #include "suawindow.h"
 
@@ -14,19 +14,13 @@ std::string thucthi_lenh(const std::string& lenh, const bool is_admin)
 		std::vector<std::string> args = { "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", lenh };
 
 		if (is_admin)
-		{
-			// Chạy lệnh với quyền Administrator
-			args = { "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command",
-					 "Start-Process -FilePath 'powershell' -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', '" + lenh + "' -Verb RunAs" };
-		}
+			args = { "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command","Start-Process -FilePath 'powershell' -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', '" + lenh + "' -Verb RunAs" };
 
 		bp::child process(powershell_path, bp::args = args);
 		process.wait();
 
 		if (process.exit_code() != 0)
-		{
 			throw std::runtime_error("Lệnh lỗi với mã thoát: " + std::to_string(process.exit_code()));
-		}
 
 		return "Đã khởi chạy thành công.";
 	} catch (const std::exception& ex)
@@ -53,3 +47,5 @@ void chaylenh_suawindow()
 		td_log(loai_log::loi, "Lỗi: " + std::string(ex.what()));
 	}
 }
+
+

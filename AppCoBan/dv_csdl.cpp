@@ -22,8 +22,8 @@ void LogicXuLy::nap_du_lieu(giaodien& gd)
 		{
 			std::vector<std::string> row;
 			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0))); // ID
-			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1))); // Name
-			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))); // Category
+			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1))); // Tên
+			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))); // Phân loại
 			gd.data.push_back(row);
 		}
 	} else

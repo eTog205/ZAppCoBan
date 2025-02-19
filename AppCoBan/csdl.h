@@ -1,11 +1,8 @@
 //csdl.h
 #pragma once
-
 #include <boost/beast/http.hpp>
 #include <boost/beast/ssl.hpp>
-#include <nlohmann/json.hpp>
 #include <sqlite3.h>
-#include <string>
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -15,7 +12,7 @@ using tcp = net::ip::tcp;
 struct csdl
 {
 	std::string owner = "eTog205";
-	std::string repo = "SuaKeyTepApp";
+	std::string repo = "ZAppCoBan";
 	std::string file_path = "sql.db";
 	std::string sha_file = "sql.sha";
 };

@@ -1,7 +1,6 @@
 //chucnang_coban.h
 #pragma once
 #include <boost/process.hpp>
-#include <string>
 
 namespace bp = boost::process;
 

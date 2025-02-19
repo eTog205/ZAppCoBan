@@ -1,6 +1,5 @@
 //logic_giaodien.h
 #pragma once
-#include <string>
 
 struct logic_giaodien
 {
@@ -51,6 +50,9 @@ struct logic_giaodien
 	{
 		delete[] ten_cot;
 	}
+
+	static void chaylenh_winget(const std::string& command_id);
+	static void chaylenh_tienich();
 };
 
 void them_cot(logic_giaodien& lg_gd, const std::string& tenmoi);
@@ -79,4 +81,5 @@ std::string tt_vanbancothenhinthay(const std::wstring& toanbo_vanban,
 								   float chieurong_hientai,
 								   float chieurong_toithieu,
 								   float chieurong_toida);
+
 

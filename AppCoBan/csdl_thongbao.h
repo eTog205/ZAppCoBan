@@ -4,7 +4,6 @@
 #include <optional>
 
 
-
 enum thongbao_giaodien :uint8_t
 {
 	sha256_mismatch,

@@ -187,7 +187,7 @@ bool download_latest_release()
 {
 	duan da;
 	const std::string host = "api.github.com";
-	const std::string target = "/repos/eTog205/SuaKeyTepApp/releases/latest";
+	const std::string target = "/repos/eTog205/ZAppCoBan/releases/latest";
 
 	const std::string response_body = send_http_request("https://" + host + target);
 	if (response_body.empty())

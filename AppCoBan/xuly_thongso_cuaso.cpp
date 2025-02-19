@@ -7,43 +7,37 @@
 #include "resource.h"
 #include "xuly_thongso_cuaso.h"
 
-#include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-
-#ifdef _WIN32  
-#define GLFW_EXPOSE_NATIVE_WIN32  
-#include <GLFW/glfw3native.h>  
-#include <windows.h>
+#ifdef _WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
 
 void set_taskbar_icon(GLFWwindow* window)
 {
-	// Lấy handle của cửa sổ  
+	// Lấy handle của cửa sổ
 	const HWND hwnd = glfwGetWin32Window(window);
 
-	// Tải icon từ resource (mã resource IDI_ICON1 phải khớp với resource.h)  
-	auto h_icon = static_cast<HICON>(LoadImage(GetModuleHandle(nullptr),
-									 MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR));
+	// Tải icon từ resource IDI_ICON1 phải khớp với resource.h
+	auto h_icon = static_cast<HICON>(LoadImage(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR));
 	if (h_icon)
 	{
-		// Đặt icon lớn cho lớp cửa sổ  
 		SetClassLongPtr(hwnd, GCLP_HICON, reinterpret_cast<LONG_PTR>(h_icon));
-		// Đồng thời cập nhật icon nhỏ (thường hiển thị ở Taskbar)
 		SendMessage(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(h_icon));
+		//SendMessage(hwnd, WM_SETICON, ICON_SMALL2, reinterpret_cast<LPARAM>(h_icon));
 		//SendMessage(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(h_icon));
 	}
 }
 #endif
 
-
 void dat_icon_cho_cuaso(GLFWwindow* window, const char* icon_path)
 {
 	// Load ảnh RGBA
-	int width, height, channels;
+	int width = 0, height = 0, channels = 0;
 	unsigned char* data = stbi_load(icon_path, &width, &height, &channels, 4);
 	if (!data)
 	{
@@ -51,16 +45,13 @@ void dat_icon_cho_cuaso(GLFWwindow* window, const char* icon_path)
 		return;
 	}
 
-	// Tạo struct GLFWimage
 	GLFWimage image;
 	image.width = width;
 	image.height = height;
 	image.pixels = data;
 
-	// Cài đặt icon cho cửa sổ
 	glfwSetWindowIcon(window, 1, &image);
 
-	// Giải phóng bộ nhớ sau khi set
 	stbi_image_free(data);
 }
 
@@ -68,7 +59,6 @@ void caidat_font()
 {
 	const ImGuiIO& io = ImGui::GetIO();
 
-	// Tùy chọn phạm vi glyph mặc định
 	//const ImWchar* full_range = io.Fonts->GetGlyphRangesDefault(); // Toàn bộ ký tự cơ bản
 
 	// Nạp font hỗ trợ tiếng Việt
@@ -81,7 +71,6 @@ void caidat_font()
 
 GLFWwindow* khoitao_cuaso()
 {
-	// Khởi tạo ImGui
 	if (!glfwInit())
 	{
 		td_log(loai_log::loi, "khởi tạo glfw thất bại");
@@ -146,7 +135,6 @@ void vonglap_chinh(GLFWwindow* cuaso)
 	giaodien gd;
 	LogicXuLy::nap_du_lieu(gd);
 
-	// Vòng lặp chính
 	while (!glfwWindowShouldClose(cuaso))
 	{
 		glfwPollEvents();
@@ -154,18 +142,15 @@ void vonglap_chinh(GLFWwindow* cuaso)
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		// Lấy kích thước cửa sổ chính
 		int chieurong_manhinh, chieucao_manhinh;
 		glfwGetFramebufferSize(cuaso, &chieurong_manhinh, &chieucao_manhinh);
 
-		// Hiển thị các giao diện
 		giaodien_thanhcongcu(gd, chieurong_manhinh, chieucao_manhinh);
 		giaodien_menuben(gd, chieucao_manhinh);
 		giaodien_tienich(gd, chieurong_manhinh, chieucao_manhinh);
 		giaodien_caidat(gd, chieurong_manhinh, chieucao_manhinh);
 		giaodien_bangdl(gd, chieurong_manhinh, chieucao_manhinh);
 
-		// Render
 		ImGui::Render();
 		glViewport(0, 0, chieurong_manhinh, chieucao_manhinh);
 		glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
@@ -186,3 +171,5 @@ void dondep(GLFWwindow* cuaso)
 	glfwDestroyWindow(cuaso);
 	glfwTerminate();
 }
+
+

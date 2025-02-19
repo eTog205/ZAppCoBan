@@ -1,11 +1,8 @@
 ﻿//giaodien.h
 #pragma once
-
 #include "logic_giaodien.h"
 
-#include <chrono>
 #include <imgui.h>
-#include <unordered_map>
 
 struct giaodien
 {
@@ -71,7 +68,7 @@ ImVec4 adjust_color_brightness(const ImVec4& color, float factor);
 
 void combo_box(const char* label, const char* options[], int options_count, int& current_selection, float gt_botron);
 
-void cap_nhat_bang_phan_mem(giaodien& gd, const logic_giaodien& lg_gd);
+void capnhat_bang_phanmem(giaodien& gd, const logic_giaodien& lg_gd);
 
 void giaodien_thanhcongcu(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
 void giaodien_menuben(giaodien& gd, int chieucao_manhinh);

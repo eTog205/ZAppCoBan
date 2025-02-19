@@ -18,14 +18,10 @@ std::string thucthi_lenh(const std::string& lenh)
 			output << line << "\n";
 
 			if (line.find("No package found matching input criteria") != std::string::npos)
-			{
 				kotimthaygoi = true;
-			}
 
 			if (line.find("Installer hash does not match") != std::string::npos)
-			{
 				sha256_mismatch = true;
-			}
 		}
 
 		process.wait(); // Chờ lệnh kết thúc
@@ -56,12 +52,11 @@ void chaylenh(const std::string& id, const std::string& tuychon_them)
 {
 	std::thread([id, tuychon_them]()
 	{
-		// Các tùy chọn mặc định cho winget
 		const std::string tuychon_macdinh = " --silent --accept-package-agreements --accept-source-agreements --disable-interactivity";
-
 		const std::string lenh = "winget install " + id + tuychon_macdinh + tuychon_them;
 
 		thucthi_lenh(lenh);
 	}).detach();
 }
+
 
