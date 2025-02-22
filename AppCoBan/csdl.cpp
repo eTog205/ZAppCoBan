@@ -46,8 +46,10 @@ std::string send_http_request(const std::string& host, const std::string& target
 
 		// Nhận phản hồi, cần tìm cách tăng giới hạn body
 		beast::flat_buffer buffer;
-		http::response<http::dynamic_body> res;
-		read(stream, buffer, res);
+		http::response_parser<http::dynamic_body> parser;
+		parser.body_limit(std::numeric_limits<std::uint64_t>::max());
+		read(stream, buffer, parser);
+		auto& res = parser.get();
 
 		// Đóng kết nối
 		beast::error_code ec;
@@ -143,7 +145,7 @@ void luu_tepsha(const std::string& sha_file, const std::string& owner, const std
 			td_log(loai_log::loi, "Metadata không phải mảng JSON");
 			return;
 		}
-		auto arr = metadata_json.as_array();
+		auto& arr = metadata_json.as_array();
 		if (arr.empty() || !arr[0].is_object())
 		{
 			td_log(loai_log::loi, "Mảng metadata rỗng hoặc phần tử đầu tiên không phải object");
@@ -204,7 +206,7 @@ void capnhat_data(const csdl& c)
 			td_log(loai_log::loi, "Metadata không phải mảng JSON");
 			return;
 		}
-		auto arr = metadata_json.as_array();
+		auto& arr = metadata_json.as_array();
 		if (arr.empty() || !arr[0].is_object())
 		{
 			td_log(loai_log::loi, "Mảng metadata rỗng hoặc phần tử đầu tiên không phải object");

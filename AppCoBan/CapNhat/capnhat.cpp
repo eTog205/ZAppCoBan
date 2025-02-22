@@ -94,6 +94,7 @@ bool sosanh_phienban(const int so_hientai, const int so_layve)
 
 void kiemtra_capnhat()
 {
+	td_log(loai_log::thong_bao, "Chạy cập nhật...");
 	const std::string latest_tag = get_release_tag();
 	if (latest_tag.empty())
 	{
@@ -101,7 +102,6 @@ void kiemtra_capnhat()
 		return;
 	}
 
-	// Đọc phiên bản hiện tại từ "phienban.txt"
 	const std::string dl_doc = doctep_phienban("phienban.txt");
 	const int so_hientai_daloc = loc_dl(dl_doc);
 	const int so_layve_daloc = loc_dl(latest_tag);

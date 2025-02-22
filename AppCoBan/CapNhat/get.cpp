@@ -15,7 +15,6 @@ namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
-
 std::string tentep;
 
 std::string send_http_request(const std::string& url, bool is_asset, int redirect_count)
@@ -75,15 +74,15 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 		http::write(stream, req);
 
 		beast::flat_buffer buffer;
+		http::response_parser<http::dynamic_body> parser;
+		parser.body_limit(std::numeric_limits<std::uint64_t>::max());
+		read(stream, buffer, parser);
+		auto& res = parser.get();
 
-		http::response_parser<http::dynamic_body> res;
-
-		http::read(stream, buffer, res);
-
-		if (res.get().result() == http::status::found || res.get().result() == http::status::temporary_redirect || res.get().result() == http::status::permanent_redirect)
+		if (res.result() == http::status::moved_permanently || res.result() == http::status::found || res.result() == http::status::temporary_redirect || res.result() == http::status::permanent_redirect)
 		{
-			auto loc = res.get().find(http::field::location);
-			if (loc != res.get().end())
+			auto loc = res.find(http::field::location);
+			if (loc != res.end())
 			{
 				auto new_url = std::string(loc->value().data(), loc->value().size());
 				return send_http_request(new_url, is_asset, redirect_count + 1);
@@ -92,9 +91,9 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 			return "";
 		}
 
-		if (res.get().result() != http::status::ok)
+		if (res.result() != http::status::ok)
 		{
-			td_log(loai_log::loi, "[send_http_request] HTTP lỗi: " + std::to_string(static_cast<int>(res.get().result())));
+			td_log(loai_log::loi, "[send_http_request] HTTP lỗi: " + std::to_string(static_cast<int>(res.result())));
 			return "";
 		}
 
@@ -112,7 +111,7 @@ std::string send_http_request(const std::string& url, bool is_asset, int redirec
 			td_log(loai_log::loi, "[send_http_request] Lỗi khi đóng socket: " + ec.message());
 		}
 
-		return buffers_to_string(res.get().body().data());
+		return buffers_to_string(res.body().data());
 	} catch (const std::exception& e)
 	{
 		td_log(loai_log::loi, "[send_http_request] Ngoại lệ: " + std::string(e.what()));

@@ -264,7 +264,7 @@ void giaodien_caidat(const int chieurong_manhinh, const int chieucao_manhinh)
 void giaodien_demo()
 {
 	// dưới là cửa sổ demo sẵn của imgui
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 
 	// nếu muốn tạo cửa sổ thì phải ImGui::Begin() và phải luôn có ImGui::End() ở cuối
 	// ImGui::Text là dòng văn bản sẽ xuất hiện
