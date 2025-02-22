@@ -78,4 +78,4 @@ void giaodien_caidat(int chieurong_manhinh, int chieucao_manhinh);
 void giaodien_bangdl(int chieurong_manhinh, int chieucao_manhinh);
 void giaodien_tienich(int chieurong_manhinh, int chieucao_manhinh);
 
-
+void giaodien_demo();

@@ -261,4 +261,21 @@ void giaodien_caidat(const int chieurong_manhinh, const int chieucao_manhinh)
 	ImGui::End();
 }
 
+void giaodien_demo()
+{
+	// dưới là cửa sổ demo sẵn của imgui
+	//ImGui::ShowDemoWindow();
 
+	// nếu muốn tạo cửa sổ thì phải ImGui::Begin() và phải luôn có ImGui::End() ở cuối
+	// ImGui::Text là dòng văn bản sẽ xuất hiện
+	// ImGui::Button là nút có thể nhấn
+	//nếu muốn chỉnh màu có thể xem hàm combo_box
+	//bắt buộc đặt tên vì đó được xem là id duy nhất.
+	ImGui::Begin("Mẫu");
+
+	//thêm # sẽ ẩn chữ
+	ImGui::Button("#nút");
+	ImGui::Text("");
+
+	ImGui::End();
+}

@@ -43,6 +43,8 @@ void ve_giaodien(const int chieurong_manhinh, const int chieucao_manhinh)
 	giaodien_tienich(chieurong_manhinh, chieucao_manhinh);
 	giaodien_caidat(chieurong_manhinh, chieucao_manhinh);
 	giaodien_bangdl(chieurong_manhinh, chieucao_manhinh);
+
+	giaodien_demo();
 }
 
 
