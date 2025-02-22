@@ -50,6 +50,8 @@ struct giaodien
 
 };
 
+extern giaodien gd;
+
 struct MenuItem
 {
 	std::wstring toanbo_vanban;
@@ -62,18 +64,18 @@ struct thongtin_cuaso_imgui
 	ImVec2 kichthuoc;
 };
 
-thongtin_cuaso_imgui tinh_thongtin_cuaso(const giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+thongtin_cuaso_imgui tinh_thongtin_cuaso(int chieurong_manhinh, int chieucao_manhinh);
 
 ImVec4 adjust_color_brightness(const ImVec4& color, float factor);
 
 void combo_box(const char* label, const char* options[], int options_count, int& current_selection, float gt_botron);
 
-void capnhat_bang_phanmem(giaodien& gd, const logic_giaodien& lg_gd);
+void capnhat_bang_phanmem(const logic_giaodien& lg_gd);
 
-void giaodien_thanhcongcu(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
-void giaodien_menuben(giaodien& gd, int chieucao_manhinh);
-void giaodien_caidat(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
-void giaodien_bangdl(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
-void giaodien_tienich(giaodien& gd, int chieurong_manhinh, int chieucao_manhinh);
+void giaodien_thanhcongcu(int chieurong_manhinh, int chieucao_manhinh);
+void giaodien_menuben(int chieucao_manhinh);
+void giaodien_caidat(int chieurong_manhinh, int chieucao_manhinh);
+void giaodien_bangdl(int chieurong_manhinh, int chieucao_manhinh);
+void giaodien_tienich(int chieurong_manhinh, int chieucao_manhinh);
 
 

@@ -48,15 +48,12 @@ std::string thucthi_lenh(const std::string& lenh)
 	return output.str();
 }
 
-void chaylenh(const std::string& id, const std::string& tuychon_them)
+void chaylenh(const std::string& id)
 {
-	std::thread([id, tuychon_them]()
-	{
-		const std::string tuychon_macdinh = " --silent --accept-package-agreements --accept-source-agreements --disable-interactivity";
-		const std::string lenh = "winget install " + id + tuychon_macdinh + tuychon_them;
+	const std::string tuychon_macdinh = " --silent --accept-package-agreements --accept-source-agreements --disable-interactivity";
+	const std::string lenh = "winget install " + id + tuychon_macdinh;
 
-		thucthi_lenh(lenh);
-	}).detach();
+	thucthi_lenh(lenh);
 }
 
 void chaylenh_suawindow()

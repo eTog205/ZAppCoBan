@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="chay_luongphu.h" />
     <ClInclude Include="chucnang_cotloi.h" />
     <ClInclude Include="csdl.h" />
     <ClInclude Include="cuaso.h" />
@@ -143,9 +144,11 @@
     <ClInclude Include="dv_csdl.h" />
     <ClInclude Include="csdl_thongbao.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="thread_pool.h" />
     <ClInclude Include="xuly_thongso_cuaso.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="chay_luongphu.cpp" />
     <ClCompile Include="chucnang_cotloi.cpp" />
     <ClCompile Include="csdl.cpp" />
     <ClCompile Include="giaodien.cpp" />
@@ -154,6 +157,7 @@
     <ClCompile Include="CL_PhanMem.cpp" />
     <ClCompile Include="dv_csdl.cpp" />
     <ClCompile Include="csdl_thongbao.cpp" />
+    <ClCompile Include="thread_pool.cpp" />
     <ClCompile Include="xuly_thongso_cuaso.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,8 @@
 ﻿//xuly_thongso_cuaso.h
 #pragma once
+#include <GLFW/glfw3.h>
 
 void set_taskbar_icon(GLFWwindow* window);
-
-void dat_icon_cho_cuaso(GLFWwindow* window, const char* icon_path);
-
 void caidat_font();
 
 void glfw_error_callback(int error, const char* description);

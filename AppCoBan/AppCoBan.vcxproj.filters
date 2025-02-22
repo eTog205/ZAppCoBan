@@ -18,11 +18,14 @@
     <Filter Include="giaodien">
       <UniqueIdentifier>{f7db664f-fd57-4a21-8320-27bfd5aa850b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="công cụ">
-      <UniqueIdentifier>{3ba3e362-cb48-4cae-89c4-8a82d9f291fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="log">
       <UniqueIdentifier>{5dfffd1d-8f67-4ac3-bf2c-e425ff29cd25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luồng phụ">
+      <UniqueIdentifier>{e90b2948-55f6-45b1-a9b2-4299338b7a5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luồng phụ\công cụ">
+      <UniqueIdentifier>{3ba3e362-cb48-4cae-89c4-8a82d9f291fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,9 +47,6 @@
     <ClInclude Include="dv_csdl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="chucnang_cotloi.h">
-      <Filter>công cụ</Filter>
-    </ClInclude>
     <ClInclude Include="log_nhalam.h">
       <Filter>log</Filter>
     </ClInclude>
@@ -55,6 +55,15 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thread_pool.h">
+      <Filter>luồng phụ</Filter>
+    </ClInclude>
+    <ClInclude Include="chucnang_cotloi.h">
+      <Filter>luồng phụ\công cụ</Filter>
+    </ClInclude>
+    <ClInclude Include="chay_luongphu.h">
+      <Filter>luồng phụ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -76,14 +85,20 @@
     <ClCompile Include="dv_csdl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="chucnang_cotloi.cpp">
-      <Filter>công cụ</Filter>
-    </ClCompile>
     <ClCompile Include="log_nhalam.cpp">
       <Filter>log</Filter>
     </ClCompile>
     <ClCompile Include="csdl_thongbao.cpp">
       <Filter>dichvu</Filter>
+    </ClCompile>
+    <ClCompile Include="thread_pool.cpp">
+      <Filter>luồng phụ</Filter>
+    </ClCompile>
+    <ClCompile Include="chucnang_cotloi.cpp">
+      <Filter>luồng phụ\công cụ</Filter>
+    </ClCompile>
+    <ClCompile Include="chay_luongphu.cpp">
+      <Filter>luồng phụ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

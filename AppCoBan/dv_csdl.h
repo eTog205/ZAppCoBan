@@ -1,12 +1,7 @@
 //dv_csdl.h
 #pragma once
-#include "giaodien.h"
 
-// Lớp trung gian xử lý logic
-class LogicXuLy
-{
-public:
-	static void nap_du_lieu(giaodien& gd);
-};
+void nap_du_lieu();
+void ve_giaodien(int chieurong_manhinh, int chieucao_manhinh);
 
 

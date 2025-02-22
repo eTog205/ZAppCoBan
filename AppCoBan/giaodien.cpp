@@ -2,9 +2,10 @@
 #include "chucnang_cotloi.h"
 #include "giaodien.h"
 
+giaodien gd;
 
 // Hàm tính toán vị trí, kích thước, tên cửa sổ và cờ cho một cửa sổ con
-thongtin_cuaso_imgui tinh_thongtin_cuaso(const giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+thongtin_cuaso_imgui tinh_thongtin_cuaso(const int chieurong_manhinh, const int chieucao_manhinh)
 {
 	thongtin_cuaso_imgui tt;
 
@@ -64,41 +65,46 @@ void combo_box(const char* label, const char* options[], const int options_count
 		current_selection = 0; // Reset về trạng thái không hiển thị gì
 }
 
-void capnhat_bang_phanmem(giaodien& gd, const logic_giaodien& lg_gd)
+void capnhat_bang_phanmem(const logic_giaodien& lg_gd)
 {
-	int column_count = lg_gd.soluong_cot + 1;
-	if (ImGui::BeginTable("BangPhanMem", column_count, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
+	int tong_cot = lg_gd.soluong_cot + 1;
+	if (ImGui::BeginTable("BangPhanMem", tong_cot, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
 	{
-		ImGui::TableSetupColumn("Chọn", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 40.0f);
-
-		for (int i = 0; i < lg_gd.soluong_cot; ++i)
-			ImGui::TableSetupColumn(lg_gd.ten_cot[i].c_str());
-
+		for (int i = 0; i < tong_cot; ++i)
+		{
+			int vitri = lg_gd.thutu_cot[i];
+			if (vitri == 0)
+				ImGui::TableSetupColumn("Chọn", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 40.0f);
+			else
+				ImGui::TableSetupColumn(lg_gd.ten_cot[vitri - 1].c_str());
+		}
 		ImGui::TableHeadersRow();
 
 		for (size_t row = 0; row < gd.data.size(); ++row)
 		{
 			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0);
-
-			std::string id = gd.data[row][0];
-
-			ImGui::Checkbox(("##check" + std::to_string(row)).c_str(), &gd.selected_map[id]);
-
-			for (int col = 0; col < lg_gd.soluong_cot; ++col)
+			for (int i = 0; i < tong_cot; ++i)
 			{
-				ImGui::TableSetColumnIndex(col + 1);
+				int vitri = lg_gd.thutu_cot[i];
+				ImGui::TableSetColumnIndex(i);
+				if (vitri == 0)
+				{
+					std::string id = gd.data[row][0];
+					ImGui::Checkbox(("##check" + std::to_string(row)).c_str(), &gd.selected_map[id]);
 
-				if (col < static_cast<int>(gd.data[row].size()))
-					ImGui::Text("%s", gd.data[row][col].c_str());
+				} else
+				{
+					int data_idx = vitri - 1;
+					if (data_idx < static_cast<int>(gd.data[row].size()))
+						ImGui::Text("%s", gd.data[row][data_idx].c_str());
+				}
 			}
-
 		}
 		ImGui::EndTable();
 	}
 }
 
-void giaodien_thanhcongcu(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+void giaodien_thanhcongcu(const int chieurong_manhinh, const int chieucao_manhinh)
 {
 	const float chieurong_hientai = static_cast<float>(chieurong_manhinh) - gd.letrai_menuben * 2;
 	const float chieucao_hientai = static_cast<float>(chieucao_manhinh) - gd.chieucao_menuben - gd.letrai_menuben * 2;
@@ -119,7 +125,7 @@ void giaodien_thanhcongcu(giaodien& gd, const int chieurong_manhinh, const int c
 	ImGui::End();
 }
 
-void giaodien_menuben(giaodien& gd, const int chieucao_manhinh)
+void giaodien_menuben(const int chieucao_manhinh)
 {
 	gd.chieucao_menuben = static_cast<float>(chieucao_manhinh) - gd.letren_menuben;
 
@@ -212,9 +218,9 @@ void giaodien_menuben(giaodien& gd, const int chieucao_manhinh)
 	ImGui::End();
 }
 
-void giaodien_bangdl(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+void giaodien_bangdl(const int chieurong_manhinh, const int chieucao_manhinh)
 {
-	const thongtin_cuaso_imgui tt = tinh_thongtin_cuaso(gd, chieurong_manhinh, chieucao_manhinh);
+	thongtin_cuaso_imgui tt = tinh_thongtin_cuaso(chieurong_manhinh, chieucao_manhinh);
 
 	ImGui::SetNextWindowPos(ImVec2(tt.vitri));
 	ImGui::SetNextWindowSize(ImVec2(tt.kichthuoc));
@@ -222,14 +228,15 @@ void giaodien_bangdl(giaodien& gd, const int chieurong_manhinh, const int chieuc
 
 	logic_giaodien lg_gd;
 	khoitao_logic_giaodien(lg_gd);
-	capnhat_bang_phanmem(gd, lg_gd);
+	//thaydoi_thutu_cot(lg_gd, 0, 2, 1);
+	capnhat_bang_phanmem(lg_gd);
 
 	ImGui::End();
 }
 
-void giaodien_tienich(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+void giaodien_tienich(const int chieurong_manhinh, const int chieucao_manhinh)
 {
-	const thongtin_cuaso_imgui tt = tinh_thongtin_cuaso(gd, chieurong_manhinh, chieucao_manhinh);
+	thongtin_cuaso_imgui tt = tinh_thongtin_cuaso(chieurong_manhinh, chieucao_manhinh);
 
 	ImGui::SetNextWindowPos(ImVec2(tt.vitri));
 	ImGui::SetNextWindowSize(ImVec2(tt.kichthuoc));
@@ -241,9 +248,9 @@ void giaodien_tienich(giaodien& gd, const int chieurong_manhinh, const int chieu
 	ImGui::End();
 }
 
-void giaodien_caidat(giaodien& gd, const int chieurong_manhinh, const int chieucao_manhinh)
+void giaodien_caidat(const int chieurong_manhinh, const int chieucao_manhinh)
 {
-	const thongtin_cuaso_imgui tt = tinh_thongtin_cuaso(gd, chieurong_manhinh, chieucao_manhinh);
+	const thongtin_cuaso_imgui tt = tinh_thongtin_cuaso(chieurong_manhinh, chieucao_manhinh);
 
 	ImGui::SetNextWindowPos(tt.vitri);
 	ImGui::SetNextWindowSize(tt.kichthuoc);

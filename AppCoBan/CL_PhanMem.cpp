@@ -1,18 +1,19 @@
 ﻿//CL_PhanMem.cpp
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
-#include <boost/interprocess/creation_tags.hpp>
-#include <boost/interprocess/sync/named_mutex.hpp>
-#include <GLFW/glfw3.h>
-
+#include "chay_luongphu.h"
 #include "log_nhalam.h"
 #include "xuly_thongso_cuaso.h"
 
+#include <boost/interprocess/sync/named_mutex.hpp>
+#include <GLFW/glfw3.h>
+
+
 int main()
 {
-	static boost::interprocess::named_mutex mutex(boost::interprocess::open_or_create, "ZitApp");
+	const char* ten_tientrinh = "ZitApp1";
+	static boost::interprocess::named_mutex mutex(boost::interprocess::open_or_create, ten_tientrinh);
 
-	// Nếu mutex đã bị khóa, tức là phần mềm đang chạy, thoát ngay
 	if (!mutex.try_lock())
 	{
 		MessageBoxA(nullptr, "Phần mềm đã chạy, không thể mở thêm!", "Cảnh báo", MB_OK | MB_ICONWARNING);
@@ -22,15 +23,18 @@ int main()
 	constexpr int mode = 1;
 	g_logger = chuyendoi(mode);
 
+	lp_chay_capnhat();
+
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+
 	GLFWwindow* cuaso = khoitao_cuaso();
 	if (!cuaso)
+	{
 		return 1;
-	if (!cuaso)
-		return 1;
+	}
 #ifdef _WIN32
 	set_taskbar_icon(cuaso);
 #endif
-
 
 	vonglap_chinh(cuaso);
 
@@ -41,6 +45,5 @@ int main()
 
 	spdlog::shutdown();
 
-	// Giải phóng mutex khi tắt chương trình
-	boost::interprocess::named_mutex::remove("ZitApp");
+	boost::interprocess::named_mutex::remove(ten_tientrinh);
 }
