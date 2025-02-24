@@ -11,7 +11,7 @@
 
 int main()
 {
-	const char* ten_tientrinh = "ZitApp1";
+	const char* ten_tientrinh = "ZitApp";
 	static boost::interprocess::named_mutex mutex(boost::interprocess::open_or_create, ten_tientrinh);
 
 	if (!mutex.try_lock())

@@ -20,7 +20,6 @@ std::string decode_base64(const std::string& encoded)
 	return decoded;
 }
 
-// 🔹 Hàm gửi request HTTP GET
 std::string send_http_request(const std::string& host, const std::string& target)
 {
 	try
@@ -105,7 +104,6 @@ std::string fetch_github_file_metadata(const std::string& owner, const std::stri
 	return response;
 }
 
-// 🔹 Hàm lưu nội dung ra file
 void save_to_file(const std::string& filename, const std::string& data)
 {
 	std::ofstream outFile(filename, std::ios::binary);

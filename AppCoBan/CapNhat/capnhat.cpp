@@ -94,7 +94,6 @@ bool sosanh_phienban(const int so_hientai, const int so_layve)
 
 void kiemtra_capnhat()
 {
-	td_log(loai_log::thong_bao, "Chạy cập nhật...");
 	const std::string latest_tag = get_release_tag();
 	if (latest_tag.empty())
 	{

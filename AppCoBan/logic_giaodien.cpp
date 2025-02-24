@@ -4,47 +4,15 @@
 #include "log_nhalam.h"
 #include "logic_giaodien.h"
 
+logic_giaodien lg_gd;
 
-void them_cot(logic_giaodien& lg_gd, const std::string& tenmoi)
+void logic_giaodien::khoidong_bang_dl()
 {
-	if (lg_gd.soluong_cot < lg_gd.succhua)
-	{
-		// Còn chỗ, chỉ cần thêm vào
-		lg_gd.ten_cot[lg_gd.soluong_cot] = tenmoi;
-		lg_gd.thutu_cot.push_back(lg_gd.soluong_cot + 1);
-		lg_gd.soluong_cot++;
-	} else
-	{
-		// Hết chỗ, cấp phát lại với kích thước lớn hơn
-		const int succhua_moi = lg_gd.succhua * 2;
-		const auto temp = new std::string[succhua_moi];
-
-		// Sao chép dữ liệu cũ sang mảng mới
-		std::copy_n(lg_gd.ten_cot, lg_gd.soluong_cot, temp);
-
-		delete[] lg_gd.ten_cot;
-
-		// Cập nhật con trỏ và sức chứa mới
-		lg_gd.ten_cot = temp;
-		lg_gd.succhua = succhua_moi;
-
-		// Thêm cột mới
-		lg_gd.ten_cot[lg_gd.soluong_cot] = tenmoi;
-		lg_gd.thutu_cot.push_back(lg_gd.soluong_cot + 1);
-		lg_gd.soluong_cot++;
-	}
-}
-
-void khoitao_logic_giaodien(logic_giaodien& lg_gd)
-{
-	them_cot(lg_gd, "id", "Tên", "Phân loại");
-}
-
-void macdinh(logic_giaodien& lg_gd)
-{
-	lg_gd.thutu_cot.clear();
-	for (int i = 0; i < lg_gd.soluong_cot; ++i)
-		lg_gd.thutu_cot.push_back(i);
+	ch_b.columns.clear();
+	ch_b.add_column(ColumnConfig("chon", "Chọn", 40.0f, 40.0f, 40.0f, false, true));
+	ch_b.add_column(ColumnConfig("id", "ID", 80.0f, 50.0f, 200.0f, true, true));
+	ch_b.add_column(ColumnConfig("ten", "Tên", 150.0f, 80.0f, 300.0f, true, true));
+	ch_b.add_column(ColumnConfig("phanloai", "Phân loại", 120.0f, 60.0f, 250.0f, true, true));
 }
 
 std::string wstring_to_string(const std::wstring& wch)

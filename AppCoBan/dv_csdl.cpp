@@ -1,8 +1,10 @@
 //dv_csdl.cpp
 #include "csdl.h"
 #include "dv_csdl.h"
+
 #include "giaodien.h"
 #include "log_nhalam.h"
+#include "logic_giaodien.h"
 
 
 void nap_du_lieu()
@@ -10,10 +12,10 @@ void nap_du_lieu()
 	int row_count = 0;
 	if (get_row_count("Items", &row_count) == SQLITE_OK && row_count > 0)
 	{
-		gd.row_count = row_count;
+		lg_gd.dem_hang = row_count;
 	}
 
-	gd.data.clear();
+	lg_gd.data.clear();
 
 	const std::string sql = "SELECT ID, Name, Category FROM Items;";
 	sqlite3_stmt* stmt;
@@ -26,7 +28,7 @@ void nap_du_lieu()
 			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0))); // ID
 			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1))); // Tên
 			row.emplace_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))); // Phân loại
-			gd.data.push_back(row);
+			lg_gd.data.push_back(row);
 		}
 	} else
 	{
@@ -44,7 +46,7 @@ void ve_giaodien(const int chieurong_manhinh, const int chieucao_manhinh)
 	giaodien_caidat(chieurong_manhinh, chieucao_manhinh);
 	giaodien_bangdl(chieurong_manhinh, chieucao_manhinh);
 
-	giaodien_demo();
+	//giaodien_demo();
 }
 
 

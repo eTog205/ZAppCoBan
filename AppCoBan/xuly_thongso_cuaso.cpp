@@ -3,11 +3,13 @@
 #include "cuaso.h"
 #include "dv_csdl.h"
 #include "log_nhalam.h"
+#include "logic_giaodien.h"
 #include "resource.h"
 #include "xuly_thongso_cuaso.h"
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
 
 #ifdef _WIN32
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -110,7 +112,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
 {
 	khoidong_sql();
 	nap_du_lieu();
-
+	//lg_gd.khoidong_bang_dl();
 	while (!glfwWindowShouldClose(cuaso))
 	{
 		glfwPollEvents();

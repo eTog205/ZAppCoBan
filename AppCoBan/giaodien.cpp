@@ -2,6 +2,8 @@
 #include "chucnang_cotloi.h"
 #include "giaodien.h"
 
+#include "logic_giaodien.h"
+
 giaodien gd;
 
 // Hàm tính toán vị trí, kích thước, tên cửa sổ và cờ cho một cửa sổ con
@@ -65,38 +67,56 @@ void combo_box(const char* label, const char* options[], const int options_count
 		current_selection = 0; // Reset về trạng thái không hiển thị gì
 }
 
-void capnhat_bang_phanmem(const logic_giaodien& lg_gd)
+void capnhat_bang_phanmem()
 {
-	int tong_cot = lg_gd.soluong_cot + 1;
-	if (ImGui::BeginTable("BangPhanMem", tong_cot, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
+	std::vector<ColumnConfig> visible_columns;
+	for (const auto& col : lg_gd.ch_b.columns)
 	{
-		for (int i = 0; i < tong_cot; ++i)
+		if (col.hienthi)
+			visible_columns.push_back(col);
+	}
+
+	const int tong_cot = static_cast<int>(visible_columns.size());
+	if (tong_cot == 0)
+		return;
+
+	if (ImGui::BeginTable("BangPhanMem", tong_cot, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Sortable))
+	{
+		for (const auto& cot : visible_columns)
 		{
-			int vitri = lg_gd.thutu_cot[i];
-			if (vitri == 0)
-				ImGui::TableSetupColumn("Chọn", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 40.0f);
-			else
-				ImGui::TableSetupColumn(lg_gd.ten_cot[vitri - 1].c_str());
+			int co = 0;
+			if (!cot.thaydoi_kt)
+			{
+				co |= ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize;
+			}
+			ImGui::TableSetupColumn(cot.tieude.c_str(), co, cot.chieurong_hientai);
 		}
 		ImGui::TableHeadersRow();
 
-		for (size_t row = 0; row < gd.data.size(); ++row)
+		for (size_t hang = 0; hang < lg_gd.data.size(); ++hang)
 		{
 			ImGui::TableNextRow();
-			for (int i = 0; i < tong_cot; ++i)
+			for (int vitri_cot = 0; vitri_cot < tong_cot; vitri_cot++)
 			{
-				int vitri = lg_gd.thutu_cot[i];
-				ImGui::TableSetColumnIndex(i);
-				if (vitri == 0)
+				ImGui::TableSetColumnIndex(vitri_cot);
+				const auto& cot = visible_columns[vitri_cot];
+				if (cot.id == "chon")
 				{
-					std::string id = gd.data[row][0];
-					ImGui::Checkbox(("##check" + std::to_string(row)).c_str(), &gd.selected_map[id]);
-
+					std::string id = lg_gd.data[hang][0];
+					ImGui::Checkbox(("##check" + std::to_string(hang)).c_str(), &lg_gd.selected_map[id]);
 				} else
 				{
-					int data_idx = vitri - 1;
-					if (data_idx < static_cast<int>(gd.data[row].size()))
-						ImGui::Text("%s", gd.data[row][data_idx].c_str());
+					int vitri_dulieu = 0;
+					if (cot.id == "id")
+						vitri_dulieu = 0;
+					else if (cot.id == "ten")
+						vitri_dulieu = 1;
+					else if (cot.id == "phanloai")
+						vitri_dulieu = 2;
+					if (vitri_dulieu < static_cast<int>(lg_gd.data[hang].size()))
+					{
+						ImGui::Text("%s", lg_gd.data[hang][vitri_dulieu].c_str());
+					}
 				}
 			}
 		}
@@ -115,7 +135,7 @@ void giaodien_thanhcongcu(const int chieurong_manhinh, const int chieucao_manhin
 	ImGui::Begin("thanh công cụ", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 	if (ImGui::Button("nút cài đặt"))
 	{
-		for (auto& item : gd.selected_map)
+		for (auto& item : lg_gd.selected_map)
 		{
 			if (item.second)
 				logic_giaodien::chaylenh_winget(item.first);
@@ -226,11 +246,8 @@ void giaodien_bangdl(const int chieurong_manhinh, const int chieucao_manhinh)
 	ImGui::SetNextWindowSize(ImVec2(tt.kichthuoc));
 	ImGui::Begin("bangdl", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
-	logic_giaodien lg_gd;
-	khoitao_logic_giaodien(lg_gd);
-	//thaydoi_thutu_cot(lg_gd, 0, 2, 1);
-	capnhat_bang_phanmem(lg_gd);
-
+	lg_gd.khoidong_bang_dl();
+	capnhat_bang_phanmem();
 	ImGui::End();
 }
 
@@ -279,3 +296,5 @@ void giaodien_demo()
 
 	ImGui::End();
 }
+
+

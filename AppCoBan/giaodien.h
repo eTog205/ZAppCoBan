@@ -1,7 +1,5 @@
 ﻿//giaodien.h
 #pragma once
-#include "logic_giaodien.h"
-
 #include <imgui.h>
 
 struct giaodien
@@ -40,14 +38,6 @@ struct giaodien
 	float letrai_bang = 14.0f;
 	float letren_bang = 125.0f;
 	float chieucao_bang = 0.0f;   // Chiều cao của bảng dữ liệu (tính theo chiều cao màn hình)
-
-	int row_count = 0;
-
-	std::vector<std::vector<std::string>> data;
-
-	std::unordered_map<std::string, bool> selected_map;
-
-
 };
 
 extern giaodien gd;
@@ -70,7 +60,7 @@ ImVec4 adjust_color_brightness(const ImVec4& color, float factor);
 
 void combo_box(const char* label, const char* options[], int options_count, int& current_selection, float gt_botron);
 
-void capnhat_bang_phanmem(const logic_giaodien& lg_gd);
+void capnhat_bang_phanmem();
 
 void giaodien_thanhcongcu(int chieurong_manhinh, int chieucao_manhinh);
 void giaodien_menuben(int chieucao_manhinh);
@@ -79,3 +69,5 @@ void giaodien_bangdl(int chieurong_manhinh, int chieucao_manhinh);
 void giaodien_tienich(int chieurong_manhinh, int chieucao_manhinh);
 
 void giaodien_demo();
+
+
