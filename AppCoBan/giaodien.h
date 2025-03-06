@@ -2,6 +2,8 @@
 #pragma once
 #include <imgui.h>
 
+using demtg = std::chrono::steady_clock;
+
 struct giaodien
 {
 	float botron_nen = 10.0f;       // Bán kính bo tròn góc của các khung hiển thị
@@ -23,15 +25,11 @@ struct giaodien
 	std::chrono::steady_clock::time_point batdau_thugon = std::chrono::steady_clock::now(); // Thời điểm bắt đầu hiệu ứng thu gọn/mở rộng
 	float thoigian_thugon = 0.3f;      // Thời gian hiệu ứng thu gọn/mở rộng menu (giây)
 
-	// Biến dùng trong tìm kiếm và lọc dữ liệu
+	// Biến dùng trong tìm kiếm và lọc dữ liệu - hiện tại không được dùng
 	char searchBuffer[128] = "";   // Bộ đệm lưu từ khóa tìm kiếm
 	int trangthai_hientai = 0;     // Lựa chọn hiện tại của bộ lọc trạng thái
 	int phienban_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phiên bản
 	int phanloai_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phân loại
-
-	// Cấu hình hiển thị bảng dữ liệu
-	bool hienthi_cot[4] = { true,true,false,true }; // Trạng thái hiển thị của từng cột
-	bool hienthi_caidat_cot = false;  // Trạng thái hiển thị menu bật/tắt các cột trong bảng(mặc định: false ẩn lúc ban đầu, true: hiện lên lúc ban đầu)
 
 	// Kích thước và vị trí của bảng dữ liệu
 	float chieurong_bang = 0.0f;
@@ -58,10 +56,11 @@ thongtin_cuaso_imgui tinh_thongtin_cuaso(int chieurong_manhinh, int chieucao_man
 
 ImVec4 adjust_color_brightness(const ImVec4& color, float factor);
 
-void combo_box(const char* label, const char* options[], int options_count, int& current_selection, float gt_botron);
+void combo_box(const char* nhãn, const char* options[], int options_count, int& current_selection, float gt_botron);
 
 void capnhat_bang_phanmem();
 
+void giaodien_anhien_cot();
 void giaodien_thanhcongcu(int chieurong_manhinh, int chieucao_manhinh);
 void giaodien_menuben(int chieucao_manhinh);
 void giaodien_caidat(int chieurong_manhinh, int chieucao_manhinh);
@@ -70,4 +69,5 @@ void giaodien_tienich(int chieurong_manhinh, int chieucao_manhinh);
 
 void giaodien_demo();
 
-
+void hienthi_loi(const std::string& loi, demtg::time_point tg_loi, int tg_tb_mat = 3);
+void giaodien_tinhnang_xuatnap_cauhinh();

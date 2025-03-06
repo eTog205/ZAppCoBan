@@ -1,10 +1,25 @@
 ﻿//giaodien.cpp
 #include "chucnang_cotloi.h"
 #include "giaodien.h"
-
 #include "logic_giaodien.h"
 
+#include <imgui_stdlib.h>
+
+#include "chay_luongphu.h"
+
 giaodien gd;
+
+void hienthi_loi(const std::string& loi, const demtg::time_point tg_loi, const int tg_tb_mat)
+{
+	if (!loi.empty())
+	{
+		auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(demtg::now() - tg_loi).count();
+		if (elapsed < tg_tb_mat)
+		{
+			ImGui::TextColored(ImVec4(1, 0, 0, 1), "%s", loi.c_str());
+		}
+	}
+}
 
 // Hàm tính toán vị trí, kích thước, tên cửa sổ và cờ cho một cửa sổ con
 thongtin_cuaso_imgui tinh_thongtin_cuaso(const int chieurong_manhinh, const int chieucao_manhinh)
@@ -33,7 +48,7 @@ ImVec4 adjust_color_brightness(const ImVec4& color, const float factor)
 	};
 }
 
-void combo_box(const char* label, const char* options[], const int options_count, int& current_selection, const float gt_botron)
+void combo_box(const char* nhãn, const char* options[], const int options_count, int& current_selection, const float gt_botron)
 {
 	// Nếu chưa chọn gì (currentSelection == 0), hiển thị chuỗi rỗng ""
 	const char* preview = (current_selection == 0) ? "" : options[current_selection];
@@ -47,7 +62,7 @@ void combo_box(const char* label, const char* options[], const int options_count
 	ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 	ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.2f, 0.2f, 0.2f, 1.0f)); // Đặt màu nền danh sách hạ xuống
 
-	if (ImGui::BeginCombo(label, preview, ImGuiComboFlags_NoArrowButton))
+	if (ImGui::BeginCombo(nhãn, preview, ImGuiComboFlags_NoArrowButton))
 	{
 		for (int i = 1; i < options_count; ++i) // Bỏ qua option đầu tiên (rỗng)
 		{
@@ -61,7 +76,7 @@ void combo_box(const char* label, const char* options[], const int options_count
 	ImGui::PopStyleVar();
 
 	ImGui::SameLine();
-	const std::string btn_label = std::string("X##") + label;
+	const std::string btn_label = std::string("X##") + nhãn;
 
 	if (ImGui::Button(btn_label.c_str()))
 		current_selection = 0; // Reset về trạng thái không hiển thị gì
@@ -86,13 +101,56 @@ void capnhat_bang_phanmem()
 		{
 			int co = 0;
 			if (!cot.thaydoi_kt)
-			{
 				co |= ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize;
+			if (!cot.sapxep)
+			{
+				co |= ImGuiTableColumnFlags_NoSort;
 			}
+
 			ImGui::TableSetupColumn(cot.tieude.c_str(), co, cot.chieurong_hientai);
 		}
 		ImGui::TableHeadersRow();
 
+		//có yêu cầu thì sắp xếp
+		if (ImGuiTableSortSpecs* sort_specs = ImGui::TableGetSortSpecs())
+		{
+			if (sort_specs->SpecsDirty && sort_specs->SpecsCount > 0)
+			{
+				const ImGuiTableColumnSortSpecs* spec = &sort_specs->Specs[0];
+				int sorted_column = spec->ColumnIndex;
+				// Kiểm tra cột sắp xếp có hợp lệ và không phải cột "chon"
+				if (sorted_column >= 0 && sorted_column < static_cast<int>(visible_columns.size()))
+				{
+					// Nếu cột này không cho phép sắp xếp thì bỏ qua xử lý sắp xếp
+					if (visible_columns[sorted_column].sapxep)
+					{
+						const std::string& col_id = visible_columns[sorted_column].id;
+						int data_index = -1;
+						if (col_id == "id")
+							data_index = 0;
+						else if (col_id == "ten")
+							data_index = 1;
+						else if (col_id == "phanloai")
+							data_index = 2;
+						// Nếu cột là cột dữ liệu hợp lệ, tiến hành sắp xếp
+						if (data_index >= 0)
+						{
+							bool ascending = (spec->SortDirection == ImGuiSortDirection_Ascending);
+							std::ranges::sort(lg_gd.data,
+											  [data_index, ascending](const std::vector<std::string>& a, const std::vector<std::string>& b)
+							{
+								if (ascending)
+									return a[data_index] < b[data_index];
+								return a[data_index] > b[data_index];
+							});
+						}
+					}
+				}
+				sort_specs->SpecsDirty = false;
+			}
+		}
+
+		//hiển thị dữ liệu cột
 		for (size_t hang = 0; hang < lg_gd.data.size(); ++hang)
 		{
 			ImGui::TableNextRow();
@@ -142,6 +200,17 @@ void giaodien_thanhcongcu(const int chieurong_manhinh, const int chieucao_manhin
 		}
 	}
 
+	if (ImGui::Button("ẩn hiện"))
+	{
+		//giaodien_anhien_cot();
+	}
+
+	ImGui::End();
+}
+
+void giaodien_anhien_cot()
+{
+	ImGui::Begin("bảng ẩn hiện");
 	ImGui::End();
 }
 
@@ -275,7 +344,61 @@ void giaodien_caidat(const int chieurong_manhinh, const int chieucao_manhinh)
 
 	ImGui::Text("Tính năng đang được phát triển. Vui lòng đợi");
 
+	giaodien_tinhnang_xuatnap_cauhinh();
+
+
 	ImGui::End();
+}
+
+void giaodien_tinhnang_xuatnap_cauhinh()
+{
+	if (ImGui::InputText("Đường dẫn thư mục", &dl.dd_xuat))
+	{
+		dl.loi_xuat_tepch.clear();
+	}
+
+	ImGui::BeginGroup();
+	if (ImGui::Button("Xuất tệp"))
+	{
+		if (kiemtraduongdan_thumuc())
+		{
+			xuat_cauhinh();
+			//lp_xuat_cauhinh("cauhinh.ini");
+		}
+	}
+
+	ImGui::SameLine();
+
+	hienthi_loi(dl.loi_xuat_tepch, dl.thoigian_loi_xuat_tepch);
+
+	ImGui::EndGroup();
+	ImGui::Separator();
+
+	if (ImGui::InputText("Đường dẫn tệp tin", &dl.dd_nap))
+	{
+		dl.loi_nap_tepch.clear();
+	}
+
+	ImGui::BeginGroup();
+	if (ImGui::Button("Nạp cấu hình"))
+	{
+		if (kiemtraduongdan_taptin())
+		{
+			ch.tep_nguon = dl.dd_nap;
+			lp_chay_saochep_ini();
+		}
+	}
+
+	ImGui::SameLine();
+
+	hienthi_loi(dl.loi_nap_tepch, dl.thoigian_loi_nap_tepch);
+
+	ImGui::EndGroup();
+
+	if (ImGui::Button("Mặc định"))
+	{
+		lp_nap_cauhinh_macdinh();
+	}
 }
 
 void giaodien_demo()

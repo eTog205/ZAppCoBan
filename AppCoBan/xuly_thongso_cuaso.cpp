@@ -3,7 +3,6 @@
 #include "cuaso.h"
 #include "dv_csdl.h"
 #include "log_nhalam.h"
-#include "logic_giaodien.h"
 #include "resource.h"
 #include "xuly_thongso_cuaso.h"
 
@@ -112,7 +111,7 @@ void vonglap_chinh(GLFWwindow* cuaso)
 {
 	khoidong_sql();
 	nap_du_lieu();
-	//lg_gd.khoidong_bang_dl();
+
 	while (!glfwWindowShouldClose(cuaso))
 	{
 		glfwPollEvents();

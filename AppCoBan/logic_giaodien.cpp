@@ -4,15 +4,22 @@
 #include "log_nhalam.h"
 #include "logic_giaodien.h"
 
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+
 logic_giaodien lg_gd;
+dulieuduongdan dl;
+cauhinh ch;
+
+using demtg = std::chrono::steady_clock;
 
 void logic_giaodien::khoidong_bang_dl()
 {
 	ch_b.columns.clear();
-	ch_b.add_column(ColumnConfig("chon", "Chọn", 40.0f, 40.0f, 40.0f, false, true));
-	ch_b.add_column(ColumnConfig("id", "ID", 80.0f, 50.0f, 200.0f, true, true));
-	ch_b.add_column(ColumnConfig("ten", "Tên", 150.0f, 80.0f, 300.0f, true, true));
-	ch_b.add_column(ColumnConfig("phanloai", "Phân loại", 120.0f, 60.0f, 250.0f, true, true));
+	ch_b.add_column(ColumnConfig("chon", "##Chọn", 40.0f, 40.0f, 40.0f, false, true, false));
+	ch_b.add_column(ColumnConfig("id", "ID", 80.0f, 50.0f, 200.0f, true, false));
+	ch_b.add_column(ColumnConfig("ten", "Tên", 150.0f, 80.0f, 300.0f));
+	ch_b.add_column(ColumnConfig("phanloai", "Phân loại", 120.0f, 60.0f, 250.0f));
 }
 
 std::string wstring_to_string(const std::wstring& wch)
@@ -26,13 +33,13 @@ std::string wstring_to_string(const std::wstring& wch)
 	return str;
 }
 
-std::wstring string_to_wstring(const std::string& ch)
+std::wstring string_to_wstring(const std::string& chuoi)
 {
-	if (ch.empty()) return L"";
+	if (chuoi.empty()) return L"";
 
-	const int size_needed = MultiByteToWideChar(CP_UTF8, 0, ch.c_str(), static_cast<int>(ch.size()), nullptr, 0);
+	const int size_needed = MultiByteToWideChar(CP_UTF8, 0, chuoi.c_str(), static_cast<int>(chuoi.size()), nullptr, 0);
 	std::wstring wstr(size_needed, 0);
-	MultiByteToWideChar(CP_UTF8, 0, ch.c_str(), static_cast<int>(ch.size()), &wstr[0], size_needed);
+	MultiByteToWideChar(CP_UTF8, 0, chuoi.c_str(), static_cast<int>(chuoi.size()), wstr.data(), size_needed);
 
 	return wstr;
 }
@@ -76,6 +83,105 @@ void logic_giaodien::chaylenh_winget(const std::string& lenh_id)
 void logic_giaodien::chaylenh_tienich()
 {
 	lp_chay_lenhwindow();
+}
+
+void tao_thumuc_tainguyen()
+{
+	if (!exists(ch.thumuc_ch))
+	{
+		create_directory(ch.thumuc_ch);
+	}
+}
+
+void saochep_ini()
+{
+	tao_thumuc_tainguyen();
+	try
+	{
+		boost::property_tree::ptree pt;
+		read_ini(ch.tep_nguon.string(), pt);
+		write_ini(ch.tep_dich.string(), pt);
+	} catch (const std::exception& e)
+	{
+		td_log(loai_log::loi, e.what());
+	}
+}
+
+bool kiemtra_duongdan(const std::string& duongdan_str, bool (*ham_kiemtra)(const fs::path&), const char* thongbao_loi, const bool chophep_rong, std::string& loi)
+{
+	const fs::path duongdan = duongdan_str;
+
+	if (!chophep_rong && duongdan.empty())
+	{
+		loi = "Lỗi: Đường dẫn không được rỗng";
+		return false;
+	}
+
+	if (!duongdan.empty() && !ham_kiemtra(duongdan))
+	{
+		loi = thongbao_loi;
+		return false;
+	}
+
+	if (ham_kiemtra == static_cast<bool(*)(const fs::path&)>(fs::is_regular_file))
+	{
+		std::string ext = duongdan.extension().string();
+		std::ranges::transform(ext, ext.begin(),
+							   [](const unsigned char c)
+		{
+			return std::tolower(c);
+		});
+		if (ext != ".ini")
+		{
+			loi = "Lỗi: Tệp không phải định dạng .ini!";
+			return false;
+		}
+	}
+
+	loi.clear();
+	return true;
+}
+
+bool kiemtraduongdan_thumuc()
+{
+	const bool dung = kiemtra_duongdan(dl.dd_xuat, fs::is_directory, "Lỗi: Đường dẫn thư mục không hợp lệ!", true, dl.loi_xuat_tepch);
+	if (!dung)
+	{
+		dl.thoigian_loi_xuat_tepch = demtg::now();
+	}
+	return dung;
+}
+
+bool kiemtraduongdan_taptin()
+{
+	const bool dung = kiemtra_duongdan(dl.dd_nap, fs::is_regular_file, "Lỗi: Đường dẫn tệp tin không hợp lệ!", false, dl.loi_nap_tepch);
+	if (!dung)
+	{
+		dl.thoigian_loi_nap_tepch = demtg::now();
+	}
+	return dung;
+}
+
+void xuat_cauhinh(const std::string& duongdan_xuat)
+{
+	boost::property_tree::ptree pt;
+	//pt.put("a", t.a);
+	write_ini(duongdan_xuat, pt);
+}
+
+void nap_cauhinh()
+{
+	if (exists(ch.tep_dich))
+	{
+		boost::property_tree::ptree pt;
+		read_ini(ch.tep_dich.string(), pt);
+		//capnhat_cauhinh(pt, "a", t.a);
+	}
+}
+
+void ch_macdinh()
+{
+	fs::remove(ch.tep_dich);
 }
 
 
