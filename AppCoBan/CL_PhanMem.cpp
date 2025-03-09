@@ -1,17 +1,15 @@
 ﻿//CL_PhanMem.cpp
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
+#include "app.h"
 #include "chay_luongphu.h"
 #include "log_nhalam.h"
-#include "xuly_thongso_cuaso.h"
-
 #include <boost/interprocess/sync/named_mutex.hpp>
-#include <GLFW/glfw3.h>
 
 
 int main()
 {
-	const auto ten_tientrinh = "ZitApp";
+	const auto ten_tientrinh = "ZitAppaaa";
 	static boost::interprocess::named_mutex mutex(boost::interprocess::open_or_create, ten_tientrinh);
 
 	if (!mutex.try_lock())
@@ -33,7 +31,7 @@ int main()
 		return 1;
 	}
 #ifdef _WIN32
-	set_taskbar_icon(cuaso);
+	dat_taskbar_icon(cuaso);
 #endif
 
 	vonglap_chinh(cuaso);

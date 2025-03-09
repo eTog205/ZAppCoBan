@@ -1,11 +1,11 @@
 ﻿//giaodien.cpp
+#include "chay_luongphu.h"
 #include "chucnang_cotloi.h"
 #include "giaodien.h"
 #include "logic_giaodien.h"
 
 #include <imgui_stdlib.h>
 
-#include "chay_luongphu.h"
 
 giaodien gd;
 
@@ -84,7 +84,7 @@ void combo_box(const char* nhãn, const char* options[], const int options_count
 
 void capnhat_bang_phanmem()
 {
-	std::vector<ColumnConfig> visible_columns;
+	std::vector<column_config> visible_columns;
 	for (const auto& col : lg_gd.ch_b.columns)
 	{
 		if (col.hienthi)
@@ -150,13 +150,18 @@ void capnhat_bang_phanmem()
 			}
 		}
 
+		float rowHeight = 20.0f;
 		//hiển thị dữ liệu cột
 		for (size_t hang = 0; hang < lg_gd.data.size(); ++hang)
 		{
-			ImGui::TableNextRow();
+			ImGui::TableNextRow(ImGuiTableRowFlags_None, rowHeight);
+			bool row_overlay_clicked = false;
+
 			for (int vitri_cot = 0; vitri_cot < tong_cot; vitri_cot++)
 			{
 				ImGui::TableSetColumnIndex(vitri_cot);
+				ImVec2 cellPos = ImGui::GetCursorScreenPos();
+
 				const auto& cot = visible_columns[vitri_cot];
 				if (cot.id == "chon")
 				{
@@ -174,8 +179,28 @@ void capnhat_bang_phanmem()
 					if (vitri_dulieu < static_cast<int>(lg_gd.data[hang].size()))
 					{
 						ImGui::Text("%s", lg_gd.data[hang][vitri_dulieu].c_str());
+						//ImGui::TextUnformatted(lg_gd.data[hang][vitri_dulieu].c_str());
 					}
 				}
+				if (cot.id != "chon")
+				{
+					float columnWidth = ImGui::GetColumnWidth();
+					ImGui::SetCursorScreenPos(cellPos);
+
+					if (ImGui::InvisibleButton(
+						("##overlay_" + std::to_string(hang) + "_" + std::to_string(vitri_cot)).c_str(),
+						ImVec2(columnWidth, rowHeight)))
+					{
+						// Nếu bấm vào bất kỳ ô nào (trừ ô checkbox), ta đánh dấu
+						row_overlay_clicked = true;
+					}
+				}
+
+			}
+			if (row_overlay_clicked)
+			{
+				std::string id = lg_gd.data[hang][0];
+				lg_gd.selected_map[id] = !lg_gd.selected_map[id];
 			}
 		}
 		ImGui::EndTable();
@@ -342,10 +367,7 @@ void giaodien_caidat(const int chieurong_manhinh, const int chieucao_manhinh)
 	ImGui::SetNextWindowSize(tt.kichthuoc);
 	ImGui::Begin("caidat", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
-	ImGui::Text("Tính năng đang được phát triển. Vui lòng đợi");
-
 	giaodien_tinhnang_xuatnap_cauhinh();
-
 
 	ImGui::End();
 }
@@ -369,7 +391,7 @@ void giaodien_tinhnang_xuatnap_cauhinh()
 
 	ImGui::SameLine();
 
-	hienthi_loi(dl.loi_xuat_tepch, dl.thoigian_loi_xuat_tepch);
+	hienthi_loi(dl.loi_xuat_tepch, dl.thoigian_hienthi_loi_xuat);
 
 	ImGui::EndGroup();
 	ImGui::Separator();
@@ -391,7 +413,7 @@ void giaodien_tinhnang_xuatnap_cauhinh()
 
 	ImGui::SameLine();
 
-	hienthi_loi(dl.loi_nap_tepch, dl.thoigian_loi_nap_tepch);
+	hienthi_loi(dl.loi_nap_tepch, dl.thoigian_hienthi_loi_nap);
 
 	ImGui::EndGroup();
 

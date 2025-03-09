@@ -6,7 +6,7 @@
 
 namespace fs = std::filesystem;
 
-struct ColumnConfig
+struct column_config
 {
 	std::string id;
 	std::string tieude;
@@ -17,24 +17,24 @@ struct ColumnConfig
 	bool hienthi;
 	bool sapxep;
 
-	ColumnConfig(std::string id, std::string tieude, const float chieurong = 100.0f, const float min_width = 40.0f, const float chieurong_toida = 1000.0f, const bool thaydoi_kt = true, const bool hienthi = true, const bool sapxep = true)
+	column_config(std::string id, std::string tieude, const float chieurong = 100.0f, const float min_width = 40.0f, const float chieurong_toida = 1000.0f, const bool thaydoi_kt = true, const bool hienthi = true, const bool sapxep = true)
 		: id(std::move(id)), tieude(std::move(tieude)), chieurong_hientai(chieurong), chieurong_toithieu(min_width), chieurong_toida(chieurong_toida), thaydoi_kt(thaydoi_kt), hienthi(hienthi), sapxep(sapxep)
 	{
 	}
 };
 
-struct TableConfig
+struct table_config
 {
-	std::vector<ColumnConfig> columns;
+	std::vector<column_config> columns;
 
-	void add_column(const ColumnConfig& col)
+	void add_column(const column_config& col)
 	{
 		columns.push_back(col);
 	}
 
 	void reorder_columns(const std::vector<std::string>& new_order)
 	{
-		std::vector<ColumnConfig> new_cols;
+		std::vector<column_config> new_cols;
 		for (const auto& id : new_order)
 		{
 			for (const auto& cot : columns)
@@ -68,7 +68,7 @@ struct TableConfig
 
 struct logic_giaodien
 {
-	TableConfig ch_b;
+	table_config ch_b;
 	std::vector<std::vector<std::string>> data;
 	std::unordered_map<std::string, bool> selected_map;
 
@@ -96,8 +96,8 @@ struct dulieuduongdan
 	std::string dd_nap;
 	std::string loi_xuat_tepch;
 	std::string loi_nap_tepch;
-	std::chrono::steady_clock::time_point thoigian_loi_xuat_tepch;
-	std::chrono::steady_clock::time_point thoigian_loi_nap_tepch;
+	std::chrono::steady_clock::time_point thoigian_hienthi_loi_xuat;
+	std::chrono::steady_clock::time_point thoigian_hienthi_loi_nap;
 };
 
 extern dulieuduongdan dl;

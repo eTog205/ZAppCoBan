@@ -27,14 +27,17 @@
     <Filter Include="luồng phụ\công cụ">
       <UniqueIdentifier>{3ba3e362-cb48-4cae-89c4-8a82d9f291fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{4578a836-b17f-4269-a9ec-a2c42ae502ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\opengl3">
+      <UniqueIdentifier>{f1f773f2-42b0-4a2b-b93a-e889855722f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\dx12">
+      <UniqueIdentifier>{b7d200d4-8deb-4e67-b89e-a6154c6da663}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="xuly_thongso_cuaso.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cuaso.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="csdl.h">
       <Filter>csdl</Filter>
     </ClInclude>
@@ -65,14 +68,17 @@
     <ClInclude Include="chay_luongphu.h">
       <Filter>luồng phụ</Filter>
     </ClInclude>
+    <ClInclude Include="opengl3_setup.h">
+      <Filter>main\opengl3</Filter>
+    </ClInclude>
+    <ClInclude Include="app.h">
+      <Filter>main\opengl3</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_setup.h">
+      <Filter>main\opengl3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="xuly_thongso_cuaso.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CL_PhanMem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="csdl.cpp">
       <Filter>csdl</Filter>
     </ClCompile>
@@ -99,6 +105,18 @@
     </ClCompile>
     <ClCompile Include="chay_luongphu.cpp">
       <Filter>luồng phụ</Filter>
+    </ClCompile>
+    <ClCompile Include="CL_PhanMem.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="opengl3_setup.cpp">
+      <Filter>main\opengl3</Filter>
+    </ClCompile>
+    <ClCompile Include="app.cpp">
+      <Filter>main\opengl3</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_setup.cpp">
+      <Filter>main\opengl3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

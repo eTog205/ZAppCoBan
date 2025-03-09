@@ -6,7 +6,6 @@
 #include "logic_giaodien.h"
 
 
-
 void nap_du_lieu()
 {
 	int row_count = 0;

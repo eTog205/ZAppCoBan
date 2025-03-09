@@ -1,11 +1,13 @@
 //logic_giaodien.cpp
 #include "chay_luongphu.h"
 #include "chucnang_cotloi.h"
+#include "giaodien.h"
 #include "log_nhalam.h"
 #include "logic_giaodien.h"
 
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+
 
 logic_giaodien lg_gd;
 dulieuduongdan dl;
@@ -16,10 +18,10 @@ using demtg = std::chrono::steady_clock;
 void logic_giaodien::khoidong_bang_dl()
 {
 	ch_b.columns.clear();
-	ch_b.add_column(ColumnConfig("chon", "##Chọn", 40.0f, 40.0f, 40.0f, false, true, false));
-	ch_b.add_column(ColumnConfig("id", "ID", 80.0f, 50.0f, 200.0f, true, false));
-	ch_b.add_column(ColumnConfig("ten", "Tên", 150.0f, 80.0f, 300.0f));
-	ch_b.add_column(ColumnConfig("phanloai", "Phân loại", 120.0f, 60.0f, 250.0f));
+	ch_b.add_column(column_config("chon", "##Chọn", 40.0f, 40.0f, 40.0f, false, true, false));
+	ch_b.add_column(column_config("id", "ID", 80.0f, 50.0f, 200.0f, true, false));
+	ch_b.add_column(column_config("ten", "Tên", 150.0f, 80.0f, 300.0f));
+	ch_b.add_column(column_config("phanloai", "Phân loại", 120.0f, 60.0f, 250.0f));
 }
 
 std::string wstring_to_string(const std::wstring& wch)
@@ -147,7 +149,7 @@ bool kiemtraduongdan_thumuc()
 	const bool dung = kiemtra_duongdan(dl.dd_xuat, fs::is_directory, "Lỗi: Đường dẫn thư mục không hợp lệ!", true, dl.loi_xuat_tepch);
 	if (!dung)
 	{
-		dl.thoigian_loi_xuat_tepch = demtg::now();
+		dl.thoigian_hienthi_loi_xuat = demtg::now();
 	}
 	return dung;
 }
@@ -157,7 +159,7 @@ bool kiemtraduongdan_taptin()
 	const bool dung = kiemtra_duongdan(dl.dd_nap, fs::is_regular_file, "Lỗi: Đường dẫn tệp tin không hợp lệ!", false, dl.loi_nap_tepch);
 	if (!dung)
 	{
-		dl.thoigian_loi_nap_tepch = demtg::now();
+		dl.thoigian_hienthi_loi_nap = demtg::now();
 	}
 	return dung;
 }
@@ -165,7 +167,14 @@ bool kiemtraduongdan_taptin()
 void xuat_cauhinh(const std::string& duongdan_xuat)
 {
 	boost::property_tree::ptree pt;
-	//pt.put("a", t.a);
+
+	pt.put("menuben_thugon", gd.menuben_thugon);
+	pt.put("thoigian_thugon", gd.thoigian_thugon);
+	pt.put("letrai_bang", gd.letrai_bang);
+	pt.put("letren_bang", gd.letren_bang);
+	pt.put("chieurong_menuben_thugon", gd.chieurong_menuben_thugon);
+	pt.put("chieurong_menuben_morong", gd.chieurong_menuben_morong);
+
 	write_ini(duongdan_xuat, pt);
 }
 
@@ -175,7 +184,13 @@ void nap_cauhinh()
 	{
 		boost::property_tree::ptree pt;
 		read_ini(ch.tep_dich.string(), pt);
-		//capnhat_cauhinh(pt, "a", t.a);
+
+		capnhat_cauhinh(pt, "menuben_thugon", gd.menuben_thugon);
+		capnhat_cauhinh(pt, "thoigian_thugon", gd.thoigian_thugon);
+		capnhat_cauhinh(pt, "letrai_bang", gd.letrai_bang);
+		capnhat_cauhinh(pt, "letren_bang", gd.letren_bang);
+		capnhat_cauhinh(pt, "chieurong_menuben_thugon", gd.chieurong_menuben_thugon);
+		capnhat_cauhinh(pt, "chieurong_menuben_morong", gd.chieurong_menuben_morong);
 	}
 }
 

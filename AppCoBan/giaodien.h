@@ -12,7 +12,7 @@ struct giaodien
 	float chieucao_thanhtieude = 23.0f;
 
 	// Kích thước và vị trí của menu bên
-	float chieurong_menuben = 180.0f;        // Chiều rộng menu bên khi mở rộng
+	float chieurong_menuben = 180.0f;        // Chiều rộng ban đầu của menu bên
 	float chieurong_menuben_thugon = 50.0f;  // Chiều rộng menu bên khi thu gọn
 	float chieurong_menuben_morong = 180.0f; // Chiều rộng tối đa khi mở rộng menu
 	float letrai_menuben = 14.0f;            // Khoảng cách từ lề trái của màn hình đến menu bên
@@ -24,12 +24,6 @@ struct giaodien
 	bool yeucau_thugon = false;        // Biến yêu cầu thu gọn/mở rộng menu
 	std::chrono::steady_clock::time_point batdau_thugon = std::chrono::steady_clock::now(); // Thời điểm bắt đầu hiệu ứng thu gọn/mở rộng
 	float thoigian_thugon = 0.3f;      // Thời gian hiệu ứng thu gọn/mở rộng menu (giây)
-
-	// Biến dùng trong tìm kiếm và lọc dữ liệu - hiện tại không được dùng
-	char searchBuffer[128] = "";   // Bộ đệm lưu từ khóa tìm kiếm
-	int trangthai_hientai = 0;     // Lựa chọn hiện tại của bộ lọc trạng thái
-	int phienban_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phiên bản
-	int phanloai_hientai = 0;      // Lựa chọn hiện tại của bộ lọc phân loại
 
 	// Kích thước và vị trí của bảng dữ liệu
 	float chieurong_bang = 0.0f;
